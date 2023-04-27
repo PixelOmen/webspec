@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href='{{ url_for("static", filename="css/base.css", v=APPVERSION) }}'>
+  <title>Simple & Elegant Form</title>
+</head>
+<body>
+<div class="banner">
+    <div id="logodiv">
+        <a id='homebtn' href="/">
+            <img src="{{ url_for('static', filename='img/mainlogo.png')}}" alt="Roundabout Logo" id='mainLogo'>
+        </a>
+    </div>
+    <img src="{{ url_for('static', filename='img/roundaboutlogo_alt.png')}}" alt="Roundabout Sign" id='roundaboutSign'>
+</div>
+</div>
+  <div class="container">
+    <h2>Simple & Elegant Form</h2>
+    <form>
+        <div class="checkboxes">
+            <div class="checkbox-container">
+                <label for="dropframe">Dropframe</label>
+                <input type="checkbox" name="dropframe" id="checkbox-dropframe">
+            </div>
+            <div class="checkbox-container">
+                <label for="lkfs">LKFS</label>
+                <input type="checkbox" name="lkfs" id="checkbox-lkfs">
+            </div>
+            <div class="checkbox-container">
+                <label for="vchip">V-chip</label>
+                <input type="checkbox" name="vchip" id="checkbox-vchip">
+            </div>
+            <div class="checkbox-container">
+                <label for="afd">AFD</label>
+                <input type="checkbox" name="afd" id="checkbox-afd">
+            </div>
+        </div>
+
+        <label for="audio_config">Audio Configuration</label>
+        <textarea name="audio_config" id="audio_config" rows="3"></textarea>
+
+        <label for="audio_details">Audio Details</label>
+        <textarea name="audio_details" id="audio_details" rows="3"></textarea>
+
+        <!-- Add more fields as needed based on the provided information -->
+
+        <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
