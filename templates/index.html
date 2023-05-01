@@ -16,25 +16,30 @@
     <img src="{{ url_for('static', filename='img/roundaboutlogo_alt.png')}}" alt="Roundabout Sign" id='roundaboutSign'>
 </div>
 </div>
-  <div class="container">
-    <h2>Simple & Elegant Form</h2>
-    <form>
+  <div class="container-form">
+    <h2>Client Spec</h2>
+    <form id="form-main">
+        <div class="input-fileUpload">
+            <input type="file" class="input-fileUpload-actual" id="input-docUpload-actual" multiple="false">
+            <button type="button" class="input-fileUpload-visual" id="input-docUpload-visual">Upload</button>
+            <span class="input-fileUpload-filename" id="input-docUpload-filename">No File Selected</span>
+        </div>
         <div class="checkboxes">
             <div class="checkbox-container">
                 <label for="dropframe">Dropframe</label>
-                <input type="checkbox" name="dropframe" id="checkbox-dropframe">
+                <input type="checkbox" name="dropframe" id="checkbox-dropframe" value="false">
             </div>
             <div class="checkbox-container">
                 <label for="lkfs">LKFS</label>
-                <input type="checkbox" name="lkfs" id="checkbox-lkfs">
+                <input type="checkbox" name="lkfs" id="checkbox-lkfs" value="true">
             </div>
             <div class="checkbox-container">
                 <label for="vchip">V-chip</label>
-                <input type="checkbox" name="vchip" id="checkbox-vchip">
+                <input type="checkbox" name="vchip" id="checkbox-vchip" value="false">
             </div>
             <div class="checkbox-container">
                 <label for="afd">AFD</label>
-                <input type="checkbox" name="afd" id="checkbox-afd">
+                <input type="checkbox" name="afd" id="checkbox-afd" value="false">
             </div>
         </div>
 
@@ -46,8 +51,9 @@
 
         <!-- Add more fields as needed based on the provided information -->
 
-        <button type="submit">Submit</button>
+        <button type="submit" id="btn-submit">Submit</button>
     </form>
   </div>
+  <script type="module" src='{{ url_for("static", filename="js/index.js", v=APPVERSION) }}'></script>
 </body>
 </html>

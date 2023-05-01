@@ -26,7 +26,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 @app.route('/')
 def index():
-    return render_template('index.html', appversion=APPVERSION)
+    return render_template('index.html', APPVERSION=APPVERSION)
 
 def websocket_app(ws: "WebSocket"):
     while not ws.closed:
