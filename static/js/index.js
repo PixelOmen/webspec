@@ -14,11 +14,11 @@ function formToObject(form) {
     }
     return obj;
 }
-myform.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = formToObject(myform);
-    console.log(formData);
-});
-uploadBtn.addEventListener('click', () => {
-    console.log("uploadbtn clicked");
-});
+function main() {
+    myform.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = formToObject(myform);
+        console.log(formData);
+    });
+}
+main();

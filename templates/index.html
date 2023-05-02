@@ -19,12 +19,31 @@
   <div class="container-form">
     <h2>Client Spec</h2>
     <form id="form-main">
+        <div class="input-simple">
+            <label for="name">Spec Name</label>
+            <input type="text" name="name" style="width: 100%;">
+        </div>
+        <div class="input-simple section-start">
+            <label for="client">Client</label>
+            <br>
+            <input type="text" name="client" style="width: 100%;">
+        </div>
+        <div class="section-start">
+            <label>Original Document</label>
+        </div>
         <div class="input-fileUpload">
             <input type="file" class="input-fileUpload-actual" id="input-docUpload-actual" multiple="false">
             <button type="button" class="input-fileUpload-visual" id="input-docUpload-visual">Upload</button>
             <span class="input-fileUpload-filename" id="input-docUpload-filename">No File Selected</span>
         </div>
+
+        <hr class="section-start">
+
         <div class="checkboxes">
+            <div class="checkbox-container">
+                <label for="audio_flags">Audio Flags</label>
+                <input type="checkbox" name="audio_flags" id="checkbox-audio_flags" checked>
+            </div>
             <div class="checkbox-container">
                 <label for="dropframe">Dropframe</label>
                 <input type="checkbox" name="dropframe" id="checkbox-dropframe" value="false">
@@ -43,15 +62,241 @@
             </div>
         </div>
 
-        <label for="audio_config">Audio Configuration</label>
-        <textarea name="audio_config" id="audio_config" rows="3"></textarea>
+        <hr>
 
-        <label for="audio_details">Audio Details</label>
-        <textarea name="audio_details" id="audio_details" rows="3"></textarea>
+        <div class="details-container">
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="burnins_required">Burnin TC/Names</label>
+                    <input type="checkbox" name="burnins_required" class="required-details-required" id="checkbox-burnins_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="burnins_details" id="textarea-burnins_details" rows="3"></textarea>
+                </div>
+            </div>
 
-        <!-- Add more fields as needed based on the provided information -->
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="watermark_required">Forensic Watermark</label>
+                    <input type="checkbox" name="watermark_required" class="required-details-required" id="checkbox-watermark_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="watermark_details" id="textarea-watermark_details" rows="3"></textarea>
+                </div>
+            </div>
 
-        <button type="submit" id="btn-submit">Submit</button>
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="subcap_required">Captions/Subtitles</label>
+                    <input type="checkbox" name="subcap_required" class="required-details-required" id="checkbox-subcap_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="subcap_details" id="textarea-subcap_details" rows="3"></textarea>
+                </div>
+            </div>
+    
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="hdr_metadata_required">HDR Metadata</label>
+                    <input type="checkbox" name="hdr_metadata_required" class="required-details-required" id="checkbox-hdr_metadata_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="hdr_metadata_details" id="textarea-hdr_metadata_details" rows="3"></textarea>
+                </div>
+            </div>
+    
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="act_breaks_required">Act/Commercial Breaks</label>
+                    <input type="checkbox" name="act_breaks_required" class="required-details-required" id="checkbox-act_breaks_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="act_breaks_details" id="textarea-act_breaks_details" rows="3"></textarea>
+                </div>
+            </div>
+    
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="audio_description_required">Audio Description (AD)</label>
+                    <input type="checkbox" name="audio_description_required" class="required-details-required" id="checkbox-audio_description_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="audio_description_details" id="textarea-audio_description_details" rows="3"></textarea>
+                </div>
+            </div>
+    
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="artwork_required">Artwork Required</label>
+                    <input type="checkbox" name="artwork_required" class="required-details-required" id="checkbox-artwork_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="artwork_details" id="textarea-artwork_details" rows="3"></textarea>
+                </div>
+            </div>
+    
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="streaming_flags_required">For Streaming</label>
+                    <input type="checkbox" name="streaming_flags_required" class="required-details-required" id="checkbox-streaming_flags_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="streaming_flags_details" id="textarea-streaming_flags_details" rows="3"></textarea>
+                </div>
+            </div>
+    
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="reports_required">Reports/Forms</label>
+                    <input type="checkbox" name="reports_required" class="required-details-required" id="checkbox-reports_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="reports_details" id="textarea-reports_details" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="required-details-container section-start">
+                <div class="checkbox-container">
+                    <label for="slate_required">Slate</label>
+                    <input type="checkbox" name="slate_required" class="required-details-required" id="checkbox-slate_required" value="false">
+                </div>
+                <div class="textarea-container required-details-details">
+                    <textarea name="slate_details" id="textarea-slate_details" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-start">
+
+        <div class="input-simple section-start">
+            <label for="start_timecode">Starting Timecode</label>
+            <br>
+            <input type="text" name="start_timecode" style="width: 150px;">
+        </div>
+
+        <div class="input-simple section-start">
+            <label for="naming_convention">Naming Convention</label>
+            <textarea id="textarea-naming_convention" rows="3"></textarea>
+        </div>
+
+        <div class="textarea-container section-start">
+            <label for="headtailbuild">Head/Tail</label>
+            <textarea name="headtailbuild" id="textarea-headtailbuild" rows="3"></textarea>
+        </div>
+
+        <div class="textarea-container section-start">
+            <label for="audio_config">Audio Configuration</label>
+            <textarea name="audio_config" id="textarea-audio_config" rows="3"></textarea>
+        </div>
+        <div class="textarea-container">
+            <label for="audio_details">Audio Details</label>
+            <textarea name="audio_details" id="textarea-audio_details" rows="3"></textarea>
+        </div>
+
+        <hr class="section-start">
+
+        <div class="singles-container section-start">
+            <div class="input-single">
+                <label for="colorspace">Colorspace</label>
+                <div class="textarea-container">
+                    <textarea name="colorspace" id="input-single-colorspace" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="resolution">Resolution</label>
+                <div class="textarea-container">
+                    <textarea name="resolution" id="input-single-resolution" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="aspect_ratio">Aspect Ratio</label>
+                <div class="textarea-container">
+                    <textarea name="aspect_ratio" id="input-single-aspect_ratio" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="framerate">Framerate</label>
+                <div class="textarea-container">
+                    <textarea name="framerate" id="input-single-framerate" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-start">
+
+        <div class="singles-container section-start">
+            <div class="input-single">
+                <label for="video_codec">Video Codec</label>
+                <div class="textarea-container">
+                    <textarea name="video_codec" id="input-single-video_codec" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="video_codec_profile">Video Codec Profile</label>
+                <div class="textarea-container">
+                    <textarea name="video_codec_profile" id="input-single-video_codec_profile" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="video_bitrate">Video Bitrate</label>
+                <div class="textarea-container">
+                    <textarea name="video_bitrate" id="input-single-video_bitrate" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="video_bitdepth">Video Bitdepth</label>
+                <div class="textarea-container">
+                    <textarea name="video_bitdepth" id="input-single-video_bitdepth" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-start">
+
+        <div class="singles-container section-start">
+            <div class="input-single">
+                <label for="audio_codec">Audio Codec</label>
+                <div class="textarea-container">
+                    <textarea name="audio_codec" id="input-single-audio_codec" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="audio_codec_profile">Audio Codec Profile</label>
+                <div class="textarea-container">
+                    <textarea name="audio_codec_profile" id="input-single-audio_codec_profile" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="audio_bitrate">Audio Bitrate</label>
+                <div class="textarea-container">
+                    <textarea name="audio_bitrate" id="input-single-audio_bitrate" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="input-single">
+                <label for="audio_bitdepth">Audio Bitdepth</label>
+                <div class="textarea-container">
+                    <textarea name="audio_bitdepth" id="input-single-audio_bitdepth" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-start">
+
+        <div class="textarea-container section-start">
+            <label for="notes">Notes</label>
+            <textarea name="notes" id="textarea-notes" rows="3"></textarea>
+        </div>
+
+        <button type="submit" id="btn-submit">Save</button>
     </form>
   </div>
   <script type="module" src='{{ url_for("static", filename="js/index.js", v=APPVERSION) }}'></script>

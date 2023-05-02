@@ -49,10 +49,20 @@ body {
     max-width: 800px;
 }
 
+.section-start {
+    margin-top: 2rem;
+}
+
+.input-simple input {
+    font-size: 14pt;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
 .input-fileUpload {
     display: flex;
     align-items: center;
-    /* margin-bottom: 1rem; */
 }
 
 #input-docUpload-actual {
@@ -84,30 +94,51 @@ h2 {
     margin-bottom: 30px;
 }
 
-input, textarea, select {
+textarea, select {
     width: 100%;
     padding: 8px;
-    border: 1px solid whitesmoke;
-    border-radius: 4px;
+    border: 2px solid black;
+    border-radius: 10px;
     box-sizing: border-box;
+    background-color: whitesmoke;
+}
+
+input {
+    background-color: whitesmoke;
+    border-radius: 10px;
 }
 
 .checkboxes {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
 }
 
 .checkbox-container {
     display: flex;
+    align-items: center;
     white-space: nowrap;
 }
 
 .checkbox-container label {
-    display: block;
-    margin-right: 10px;
+    margin-right: 5px;
+}
+
+.details-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* flex-direction: column; */
+}
+
+.required-details-details {
+    min-width: 250px;
+}
+
+.singles-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 button {
@@ -128,4 +159,8 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+.hidden {
+    display: none;
 }
