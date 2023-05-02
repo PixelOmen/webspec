@@ -1,25 +1,69 @@
-const myform = document.getElementById('form-main') as HTMLFormElement;
-const uploadBtn = document.getElementById('input-docUpload-visual') as HTMLFormElement;
+const ELEMENTS = {
+    form: document.getElementById('form-main') as HTMLFormElement,
+    uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
+    uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement
+}
 
-function formToObject(form: HTMLFormElement) {
+const STATE = {
+    CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
+    sessionID: "",
+    sendAllowed: true,
+    username: "",
+    password: ""
+  }
+STATE.CONNECTION.onopen = () => {
+    console.log("Connection open");
+}
+STATE.CONNECTION.onclose = () => {
+    console.log("Connection closed");
+}
+STATE.CONNECTION.onerror = (e) => {
+    console.error(e);
+}
+STATE.CONNECTION.onmessage = (msg) => {
+    const data = JSON.parse(msg.data);
+    console.log(data);
+    if (data.type === "sessionID") {
+        STATE.sessionID = data.sessionID;
+        return;
+    }
+    if (data.type === "upload") {
+        console.log(data.msg);
+    }
+}
+
+function formToFormData(form: HTMLFormElement): FormData {
     const formData = new FormData(form);
-    const obj: {[key: string]: FormDataEntryValue | boolean} = {};
+    const jsonobj: {[key: string]: FormDataEntryValue | boolean} = {"sessionID": STATE.sessionID};
     for (const [key, value] of formData.entries()) {
-        obj[key] = value;
+        if (value instanceof File) {
+            continue;
+        }
+        jsonobj[key] = value;
     }
     const elements = form.querySelectorAll('input[type="checkbox"]');
     const checkboxes = elements as NodeListOf<HTMLInputElement>;
     for (const checkbox of checkboxes) {
-        obj[checkbox.name] = checkbox.checked;
+        jsonobj[checkbox.name] = checkbox.checked;
     }
-    return obj;
+    formData.append("jsonData", JSON.stringify(jsonobj));
+    return formData;
 }
 
 function main() {    
-    myform.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const formData = formToObject(myform);
-      console.log(formData);
+    ELEMENTS.form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = formToFormData(ELEMENTS.form);
+        fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        }).then((res) => { return res.json() }).then((data) => {
+            console.log(data);
+        });
+    });
+
+    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.uploadBtnActual.click();
     });
 }
 
