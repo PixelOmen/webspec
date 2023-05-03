@@ -2,7 +2,10 @@ const ELEMENTS = {
     form: document.getElementById('form-main') as HTMLFormElement,
     uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
     uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
-    uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement
+    uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
+    notificationContainer: document.getElementById('notification-container') as HTMLDivElement,
+    notificationBlur: document.getElementById('notification-blur') as HTMLDivElement,
+    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement,
 }
 
 const STATE = {
@@ -16,9 +19,13 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 }
 STATE.CONNECTION.onclose = () => {
+    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
 }
 STATE.CONNECTION.onerror = (e) => {
+    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
 }
 STATE.CONNECTION.onmessage = (msg) => {
@@ -51,7 +58,10 @@ function formToFormData(form: HTMLFormElement): FormData {
     return formData;
 }
 
-function main() {    
+function main() {
+    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
+        window.location.reload();
+    });
     ELEMENTS.form.addEventListener('submit', (event) => {
         event.preventDefault();
         const formData = formToFormData(ELEMENTS.form);

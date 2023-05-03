@@ -3,7 +3,10 @@ const ELEMENTS = {
     form: document.getElementById('form-main'),
     uploadBtnVisual: document.getElementById('input-docUpload-visual'),
     uploadBtnActual: document.getElementById('input-docUpload-actual'),
-    uploadFilename: document.getElementById('input-docUpload-filename')
+    uploadFilename: document.getElementById('input-docUpload-filename'),
+    notificationContainer: document.getElementById('notification-container'),
+    notificationBlur: document.getElementById('notification-blur'),
+    notificationBtnReload: document.getElementById('notification-btn-reload'),
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -16,9 +19,13 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
+    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
 };
 STATE.CONNECTION.onerror = (e) => {
+    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
 };
 STATE.CONNECTION.onmessage = (msg) => {
@@ -50,6 +57,9 @@ function formToFormData(form) {
     return formData;
 }
 function main() {
+    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
+        window.location.reload();
+    });
     ELEMENTS.form.addEventListener('submit', (event) => {
         event.preventDefault();
         const formData = formToFormData(ELEMENTS.form);

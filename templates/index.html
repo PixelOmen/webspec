@@ -15,8 +15,13 @@
         </div>
         <img src="{{ url_for('static', filename='img/roundaboutlogo_alt.png')}}" alt="Roundabout Sign" id='roundaboutSign'>
     </div>
-    <div class="notification-websocket">
-
+    <div class="hidden" id="notification-blur"></div>
+    <div class="hidden" id="notification-container">
+        <div id="notification-message">
+            <p>Connection lost. Please try refreshing the page.</p>
+        </div>
+        <br>
+        <button id="notification-btn-reload">Refresh</button>
     </div>
     <div class="container-form">
         <h2>Client Spec</h2>

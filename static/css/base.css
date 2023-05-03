@@ -39,6 +39,41 @@ body {
     background-color: rgb(53,54,65);
 }
 
+#notification-container {
+    position: fixed;
+    top: 30%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    padding: 20px;
+    border: solid 3px black;
+    border-radius: 10px;
+    background-color: rgb(68,70,84);
+    color: whitesmoke;
+    font-size: 14pt;
+    font-weight: bold;
+    z-index: 100;
+    width: 500px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+#notification-blur {
+    position: fixed;
+    backdrop-filter: blur(4px);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    /* border: solid 5px red; */
+}
+
+#notification-btn-reload {
+    color: white;
+    width: 100px;
+    margin-left: auto;
+}
+
 .container-form {
     background-color: rgb(68,70,84);
     margin-top: 1rem;
@@ -168,6 +203,10 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+button:active {
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  }
 
 .hidden {
     display: none;
