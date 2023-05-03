@@ -1,7 +1,8 @@
 const ELEMENTS = {
     form: document.getElementById('form-main') as HTMLFormElement,
     uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
-    uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement
+    uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
+    uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement
 }
 
 const STATE = {
@@ -64,6 +65,10 @@ function main() {
 
     ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
         ELEMENTS.uploadBtnActual.click();
+    });
+    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.uploadBtnActual.files[0];
+        ELEMENTS.uploadFilename.innerText = file.name;
     });
 }
 

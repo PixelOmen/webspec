@@ -2,7 +2,8 @@
 const ELEMENTS = {
     form: document.getElementById('form-main'),
     uploadBtnVisual: document.getElementById('input-docUpload-visual'),
-    uploadBtnActual: document.getElementById('input-docUpload-actual')
+    uploadBtnActual: document.getElementById('input-docUpload-actual'),
+    uploadFilename: document.getElementById('input-docUpload-filename')
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -61,6 +62,10 @@ function main() {
     });
     ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
         ELEMENTS.uploadBtnActual.click();
+    });
+    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.uploadBtnActual.files[0];
+        ELEMENTS.uploadFilename.innerText = file.name;
     });
 }
 main();

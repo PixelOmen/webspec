@@ -27,20 +27,23 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 def handle_request(environ: dict, start_response: Callable):
     if environ["PATH_INFO"] == "/connect":
-        ws = create_session(environ)
-        websocket_app(ws)
+        ws, address, sessionid = create_session(environ)
+        websocket_app(ws, address, sessionid)
         return []
     else:
         return app(environ, start_response)
     
-def create_session(environ: dict) -> "WebSocket":
+def create_session(environ: dict) -> tuple["WebSocket", str, str]:
     ws = environ.get("wsgi.websocket")
     if ws is None:
         raise WebSocketError("WebSocket not found in environment")
+    address: str | None = environ.get("REMOTE_ADDR")
+    if address is None:
+        raise WebSocketError("Remote address not found in environment")
     sessionid = str(uuid.uuid4())
-    CONNECTIONS[(ws.environ.get("REMOTE_ADDR"), sessionid)] = ws
+    CONNECTIONS[(address, sessionid)] = ws
     ws.send(json.dumps({"type": "sessionID", "sessionID": sessionid}))
-    return ws
+    return (ws, address, sessionid)
 
 def websocket_from_sessionid(sessionid: str) -> "WebSocket":
     address = request.remote_addr
@@ -52,12 +55,16 @@ def websocket_from_sessionid(sessionid: str) -> "WebSocket":
         raise WebSocketError("Session ID not found in connections")
     return ws
 
-def websocket_app(ws: "WebSocket"):
+def websocket_app(ws: "WebSocket", remote_addr: str, sessionid: str):
     while not ws.closed:
         msg = ws.receive()
         if msg:
-            form = request.environ['werkzeug.request_form']
-            print(form['test'])
+            pass
+    try:
+        print(f"Closing websocket connection for ({remote_addr}, {sessionid})")
+        del CONNECTIONS[(remote_addr, sessionid)]
+    except KeyError:
+        pass
 
 
 
@@ -68,13 +75,13 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     data = request.form['jsonData']
-    jsondata = json.loads(data)
     files = request.files
+    jsondata = json.loads(data)
     ws = websocket_from_sessionid(jsondata['sessionID'])
-    print(data)
-    print(files)
-    ws.send(json.dumps({"type": "upload", "msg": "Websocket connection through route successful"}))
-    return json.dumps({'success':True})
+    ws.send(json.dumps({"type": "upload", "msg": "Websocket connection through sessionID successfull"}))
+    for file in files:
+        print(files[file].filename)
+    return json.dumps({'success': True})
 
 
 if __name__ == '__main__':

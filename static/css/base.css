@@ -64,6 +64,7 @@ body {
 .input-fileUpload {
     display: flex;
     align-items: center;
+    max-width: 100%;
 }
 
 #input-docUpload-actual {
@@ -79,6 +80,7 @@ body {
     cursor: pointer;
     text-align: center;
     width: 150px;
+    min-width: 150px;
 }
 
 #input-docUpload-visual:hover {
@@ -88,6 +90,12 @@ body {
 .input-fileUpload-filename {
     margin-left: 10px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: solid 1px grey;
+    border-radius: 10px;
+    padding: 5px;
+    width: 100%;
 }
 
 h2 {
