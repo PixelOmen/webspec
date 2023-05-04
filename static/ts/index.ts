@@ -5,7 +5,7 @@ const ELEMENTS = {
     uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
     notificationContainer: document.getElementById('notification-container') as HTMLDivElement,
     notificationBlur: document.getElementById('notification-blur') as HTMLDivElement,
-    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement,
+    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement
 }
 
 const STATE = {
@@ -14,7 +14,7 @@ const STATE = {
     sendAllowed: true,
     username: "",
     password: ""
-  }
+}
 STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 }
@@ -30,7 +30,6 @@ STATE.CONNECTION.onerror = (e) => {
 }
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
-    console.log(data);
     if (data.type === "sessionID") {
         STATE.sessionID = data.sessionID;
         return;
@@ -81,6 +80,5 @@ function main() {
         ELEMENTS.uploadFilename.innerText = file.name;
     });
 }
-
 
 main();

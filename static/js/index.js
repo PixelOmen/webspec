@@ -6,7 +6,7 @@ const ELEMENTS = {
     uploadFilename: document.getElementById('input-docUpload-filename'),
     notificationContainer: document.getElementById('notification-container'),
     notificationBlur: document.getElementById('notification-blur'),
-    notificationBtnReload: document.getElementById('notification-btn-reload'),
+    notificationBtnReload: document.getElementById('notification-btn-reload')
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -30,7 +30,6 @@ STATE.CONNECTION.onerror = (e) => {
 };
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
-    console.log(data);
     if (data.type === "sessionID") {
         STATE.sessionID = data.sessionID;
         return;

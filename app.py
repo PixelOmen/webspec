@@ -2,12 +2,14 @@ import json
 import uuid
 import logging
 import mimetypes
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Any
 
 from gevent import pywsgi
 from flask import Flask, render_template, request
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
+
+from backend.handlers import UploadHandler
 
 if TYPE_CHECKING:
     from geventwebsocket.websocket import WebSocket
@@ -76,12 +78,12 @@ def index():
 def upload():
     data = request.form['jsonData']
     files = request.files
-    jsondata = json.loads(data)
+    jsondata: dict[str, Any] = json.loads(data)
     ws = websocket_from_sessionid(jsondata['sessionID'])
     ws.send(json.dumps({"type": "upload", "msg": "Websocket connection through sessionID successfull"}))
-    for file in files:
-        print(files[file].filename)
-    return json.dumps({'success': True})
+    handler = UploadHandler(jsondata, files)
+    handler.send()
+    return handler.status().json()
 
 
 if __name__ == '__main__':
