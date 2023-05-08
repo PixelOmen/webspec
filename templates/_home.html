@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 {% block head %}
+    <link rel="stylesheet" href='{{ url_for("static", filename="css/home.css", v=APPVERSION)}}'>
     <title>Spec DB</title>
 {% endblock %}
 {% block body %}
-<div class="btn-container">
-    
-</div>    
+<div class="splash-container">
+    <h1>
+        Client Specs
+    </h1>
+    <div class="btn-container">
+        <br>
+        <br>
+        <a href="/entry">
+            <button class="btn-nav">New</button>
+        </a>
+        <a href="/view">
+            <button class="btn-nav">Browse</button>
+        </a>
+    </div>    
+</div>
 {% endblock %}
 {% block script %}
 {% endblock %}

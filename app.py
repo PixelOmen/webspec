@@ -69,10 +69,13 @@ def websocket_app(ws: "WebSocket", remote_addr: str, sessionid: str):
         pass
 
 
-
 @app.route('/')
 def index():
-    return render_template('_entry.html', APPVERSION=APPVERSION)
+    return render_template(f'_home.html', APPVERSION=APPVERSION)
+
+@app.route('/<string:page>')
+def nav(page: str):
+    return render_template(f'_{page}.html', APPVERSION=APPVERSION)
 
 @app.route('/upload', methods=['POST'])
 def upload():
