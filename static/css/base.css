@@ -74,39 +74,17 @@ body {
     margin-left: auto;
 }
 
-.container-form {
-    background-color: rgb(68,70,84);
-    margin-top: 1rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 800px;
-    min-width: 800px;
-}
-
-.section-start {
-    margin-top: 2rem;
-}
-
-.input-simple input {
-    font-size: 14pt;
-    padding-left: 10px;
-    padding-right: 10px;
-    box-sizing: border-box;
-}
-
-.input-fileUpload {
+.input-fileUpload-container {
     display: flex;
     align-items: center;
     max-width: 100%;
 }
 
-#input-docUpload-actual {
+.input-fileUpload-actual {
     display: none;
 }
 
-#input-docUpload-visual {
+.input-fileUpload-visual {
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -116,10 +94,6 @@ body {
     text-align: center;
     width: 150px;
     min-width: 150px;
-}
-
-#input-docUpload-visual:hover {
-    background-color: #45a049;
 }
 
 .input-fileUpload-filename {
@@ -152,38 +126,6 @@ input {
     border-radius: 10px;
 }
 
-.checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
-
-.checkbox-container label {
-    margin-right: 5px;
-}
-
-.details-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.required-details-details {
-    min-width: 250px;
-}
-
-.singles-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
 button {
     background-color: #4CAF50;
     color: white;
@@ -194,10 +136,6 @@ button {
     text-align: center;    
     display: block;
     width: 100%;
-}
-
-#btn-submit {
-    margin-top: 30px;
 }
 
 button:hover {

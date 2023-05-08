@@ -72,7 +72,7 @@ def websocket_app(ws: "WebSocket", remote_addr: str, sessionid: str):
 
 @app.route('/')
 def index():
-    return render_template('index.html', APPVERSION=APPVERSION)
+    return render_template('_entry.html', APPVERSION=APPVERSION)
 
 @app.route('/upload', methods=['POST'])
 def upload():
