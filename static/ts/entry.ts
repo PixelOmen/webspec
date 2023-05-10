@@ -34,7 +34,7 @@ STATE.CONNECTION.onmessage = (msg) => {
         STATE.sessionID = data.sessionID;
         return;
     }
-    if (data.type === "upload") {
+    if (data.type === "debug") {
         console.log(data.msg);
     }
 }
@@ -57,19 +57,31 @@ function formToFormData(form: HTMLFormElement): FormData {
     return formData;
 }
 
+function sendForm(form: HTMLFormElement): Promise<any> {
+    const formData = formToFormData(form);
+    return fetch('/upload', {
+        method: 'POST',
+        body: formData,
+    }).then((res) => {
+        return res.json();
+    }).then((data) => {
+        return data;
+    });
+}
+
 function main() {
     ELEMENTS.notificationBtnReload.addEventListener('click', () => {
         window.location.reload();
     });
-    ELEMENTS.form.addEventListener('submit', (event) => {
+    ELEMENTS.form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const formData = formToFormData(ELEMENTS.form);
-        fetch('/upload', {
-            method: 'POST',
-            body: formData,
-        }).then((res) => { return res.json() }).then((data) => {
-            console.log(data);
-        });
+        if (!STATE.sendAllowed) {
+            return;
+        }
+        STATE.sendAllowed = false;
+        const response = await sendForm(ELEMENTS.form);
+        STATE.sendAllowed = true;
+        console.log(response);
     });
 
     ELEMENTS.uploadBtnVisual.addEventListener('click', () => {

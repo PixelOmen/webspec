@@ -10,6 +10,7 @@ class BackEndResponse:
 
     def json(self) -> dict[str, Any]:
         return {
+            "type": self.type,
             "status": self.status,
             "error": self.error,
             "output": self.output

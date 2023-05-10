@@ -5,11 +5,12 @@ import mimetypes
 from typing import TYPE_CHECKING, Callable, Any
 
 from gevent import pywsgi
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
-from backend.handlers import UploadHandler
+from backend import BackEndResponse
+from backend.handlers import UploadHandler, QueryHandler
 
 if TYPE_CHECKING:
     from geventwebsocket.websocket import WebSocket
@@ -73,7 +74,7 @@ def websocket_app(ws: "WebSocket", remote_addr: str, sessionid: str):
 def index():
     return render_template(f'_home.html', APPVERSION=APPVERSION)
 
-@app.route('/<string:page>')
+@app.route('/nav/<string: page>')
 def nav(page: str):
     return render_template(f'_{page}.html', APPVERSION=APPVERSION)
 
@@ -83,10 +84,21 @@ def upload():
     files = request.files
     jsondata: dict[str, Any] = json.loads(data)
     ws = websocket_from_sessionid(jsondata['sessionID'])
-    ws.send(json.dumps({"type": "upload", "msg": "Websocket connection through sessionID successfull"}))
+    ws.send(json.dumps({"type": "debug", "msg": "Websocket connection through sessionID successfull (upload)"}))
     handler = UploadHandler(jsondata, files)
     handler.send()
     return handler.status().json()
+
+@app.route('/query/<string: table>/<string: query>', methods=['GET'])
+def query(table: str, query: str):
+    if table.lower() == "clients":
+        return client_query(query)
+    return BackEndResponse(type="query", status="error", error=f"Invalid table name: {table}").json()
+
+def client_query(query: str) -> dict[str, Any]:
+    if query.lower() != "all":
+        return BackEndResponse(type="clientquery", status="error", error=f"Query not implemented: {query}").json()
+    return QueryHandler().all_clients().json()
 
 
 if __name__ == '__main__':

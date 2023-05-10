@@ -4,13 +4,6 @@ from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-utils.delete_spec("My New Client Spec", session)
-utils.delete_spec("My Disney Spec", session)
-utils.delete_client("New Client", session)
-# client = session.query(Client).filter(Client.name == "New Client").first()
-# if client is None:
-#     session.close()
-#     exit()
-# for spec in client.specs:
-#     print(spec.name)
+clients = session.query(Client).all()
+print(clients[0].specs)
 session.close()

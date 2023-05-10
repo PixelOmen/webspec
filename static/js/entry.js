@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 const ELEMENTS = {
     form: document.getElementById('form-main'),
     uploadBtnVisual: document.getElementById('input-docUpload-visual'),
@@ -34,7 +43,7 @@ STATE.CONNECTION.onmessage = (msg) => {
         STATE.sessionID = data.sessionID;
         return;
     }
-    if (data.type === "upload") {
+    if (data.type === "debug") {
         console.log(data.msg);
     }
 };
@@ -55,20 +64,31 @@ function formToFormData(form) {
     formData.append("jsonData", JSON.stringify(jsonobj));
     return formData;
 }
+function sendForm(form) {
+    const formData = formToFormData(form);
+    return fetch('/upload', {
+        method: 'POST',
+        body: formData,
+    }).then((res) => {
+        return res.json();
+    }).then((data) => {
+        return data;
+    });
+}
 function main() {
     ELEMENTS.notificationBtnReload.addEventListener('click', () => {
         window.location.reload();
     });
-    ELEMENTS.form.addEventListener('submit', (event) => {
+    ELEMENTS.form.addEventListener('submit', (event) => __awaiter(this, void 0, void 0, function* () {
         event.preventDefault();
-        const formData = formToFormData(ELEMENTS.form);
-        fetch('/upload', {
-            method: 'POST',
-            body: formData,
-        }).then((res) => { return res.json(); }).then((data) => {
-            console.log(data);
-        });
-    });
+        if (!STATE.sendAllowed) {
+            return;
+        }
+        STATE.sendAllowed = false;
+        const response = yield sendForm(ELEMENTS.form);
+        STATE.sendAllowed = true;
+        console.log(response);
+    }));
     ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
         ELEMENTS.uploadBtnActual.click();
     });

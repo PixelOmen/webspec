@@ -58,8 +58,40 @@ class UploadHandler:
         if self._status == "error":
             session.close()
             return
-        spec = Spec(**self.jsondata)
-        session.add(spec)
-        session.commit()
-        self._status = "ok"
-        session.close()
+        try:
+            spec = Spec(**self.jsondata)
+            session.add(spec)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            session.close()
+            self._set_error(f"{type(e).__name__}: {e}")
+        else:
+            self._status = "ok"
+            session.close()
+
+
+
+class QueryHandler:
+    def __init__(self) -> None:
+        self.session = None
+
+    def _get_session(self) -> Session:
+        if self.session is None:
+            self.session = SESSIONFACTORY()
+        return self.session
+    
+    def _close_session(self) -> None:
+        if self.session is not None:
+            self.session.close()
+            self.session = None
+    
+    def _all_clients(self) -> list[Client]:
+        session = self._get_session()
+        clients = session.query(Client).all()
+        return clients
+
+    def all_clients(self) -> BackEndResponse:
+        clients = self._all_clients()
+        self._close_session()
+        return BackEndResponse(type="clientquery", output={"clients": [client.name for client in clients]})
