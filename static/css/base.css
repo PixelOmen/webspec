@@ -40,7 +40,7 @@ body {
     background-color: rgb(53,54,65);
 }
 
-#notification-container {
+.notification-container {
     position: fixed;
     top: 30%;
     right: 50%;
@@ -69,7 +69,7 @@ body {
     /* border: solid 5px red; */
 }
 
-#notification-btn-reload {
+.notification-btn {
     color: white;
     width: 100px;
     margin-left: auto;

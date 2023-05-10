@@ -5,9 +5,12 @@ const ELEMENTS = {
     uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
     uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
     uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
-    notificationContainer: document.getElementById('notification-container') as HTMLDivElement,
     notificationBlur: document.getElementById('notification-blur') as HTMLDivElement,
-    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement
+    notificationContainer: document.getElementById('notification-container-generic') as HTMLDivElement,
+    notificationMessage: document.getElementById('notification-message') as HTMLDivElement,
+    notificationBtnClose: document.getElementById('notification-btn-close') as HTMLButtonElement,
+    notificationDisconnect: document.getElementById('notification-container-disconnect') as HTMLDivElement,
+    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement,
 }
 
 const STATE = {
@@ -21,12 +24,12 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 }
 STATE.CONNECTION.onclose = () => {
-    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationDisconnect.classList.remove('hidden');
     ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
 }
 STATE.CONNECTION.onerror = (e) => {
-    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationDisconnect.classList.remove('hidden');
     ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
 }
@@ -39,6 +42,12 @@ STATE.CONNECTION.onmessage = (msg) => {
     if (data.type === "debug") {
         console.log(data.msg);
     }
+}
+
+function displayNotification(msg: string) {
+    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationBlur.classList.remove('hidden');
+    ELEMENTS.notificationMessage.innerHTML = `<p>${msg}</p>`;
 }
 
 function formToFormData(form: HTMLFormElement): FormData {
@@ -71,6 +80,16 @@ function sendForm(form: HTMLFormElement): Promise<any> {
     });
 }
 
+function setNotificationContainer() {
+    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
+        window.location.reload();
+    });
+    ELEMENTS.notificationBtnClose.addEventListener('click', () => {
+        ELEMENTS.notificationContainer.classList.add('hidden');
+        ELEMENTS.notificationBlur.classList.add('hidden');
+    });
+}
+
 
 async function setClientDropdown() {
     const response = await fetch("/query/clients/all")
@@ -98,12 +117,17 @@ async function setClientDropdown() {
     });
 }
 
-
-function main() {
-    setClientDropdown();
-    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
-        window.location.reload();
+function setUploadBtn() {
+    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.uploadBtnActual.click();
     });
+    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.uploadBtnActual.files[0];
+        ELEMENTS.uploadFilename.innerText = file.name;
+    });
+}
+
+function setSubmitBtn() {
     ELEMENTS.form.addEventListener('submit', async (event) => {
         event.preventDefault();
         if (!STATE.sendAllowed) {
@@ -112,16 +136,23 @@ function main() {
         STATE.sendAllowed = false;
         const response = await sendForm(ELEMENTS.form);
         STATE.sendAllowed = true;
-        console.log(response);
+        if (response.status == "error") {
+            displayNotification(response.error);
+            return;
+        }
+        if (response.status == "ok") {
+            displayNotification("New Spec successfully created.");
+            return;
+        }
     });
+}
 
-    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
-        ELEMENTS.uploadBtnActual.click();
-    });
-    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
-        const file = ELEMENTS.uploadBtnActual.files[0];
-        ELEMENTS.uploadFilename.innerText = file.name;
-    });
+
+function main() {
+    setNotificationContainer();
+    setClientDropdown();
+    setUploadBtn();
+    setSubmitBtn();
 }
 
 main();

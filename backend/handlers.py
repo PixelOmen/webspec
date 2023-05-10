@@ -22,17 +22,17 @@ class UploadHandler:
     def _handle_spec_name(self, session: "Session") -> None:
         spec_name = self.jsondata.get("name")
         if not spec_name:
-            self._set_error("Spec name not specified")
+            self._set_error("Spec name not specified.")
             return
         spec_exists = session.query(Spec).filter(Spec.name == spec_name).first()
         if spec_exists:
-            self._set_error("Spec name already exists")
+            self._set_error("Spec name already exists.")
             return
     
     def _handle_client(self, session: "Session") -> None:
         spec_client = self.jsondata.get("client_name")
         if not spec_client:
-            self._set_error("Client name not specified")
+            self._set_error("Client name not specified.")
             return
         client_exists = session.query(Client).filter(Client.name == spec_client).first()
         if not client_exists:

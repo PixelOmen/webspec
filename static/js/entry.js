@@ -15,9 +15,12 @@ const ELEMENTS = {
     uploadBtnVisual: document.getElementById('input-docUpload-visual'),
     uploadBtnActual: document.getElementById('input-docUpload-actual'),
     uploadFilename: document.getElementById('input-docUpload-filename'),
-    notificationContainer: document.getElementById('notification-container'),
     notificationBlur: document.getElementById('notification-blur'),
-    notificationBtnReload: document.getElementById('notification-btn-reload')
+    notificationContainer: document.getElementById('notification-container-generic'),
+    notificationMessage: document.getElementById('notification-message'),
+    notificationBtnClose: document.getElementById('notification-btn-close'),
+    notificationDisconnect: document.getElementById('notification-container-disconnect'),
+    notificationBtnReload: document.getElementById('notification-btn-reload'),
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -30,12 +33,12 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
-    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationDisconnect.classList.remove('hidden');
     ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
 };
 STATE.CONNECTION.onerror = (e) => {
-    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationDisconnect.classList.remove('hidden');
     ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
 };
@@ -49,6 +52,11 @@ STATE.CONNECTION.onmessage = (msg) => {
         console.log(data.msg);
     }
 };
+function displayNotification(msg) {
+    ELEMENTS.notificationContainer.classList.remove('hidden');
+    ELEMENTS.notificationBlur.classList.remove('hidden');
+    ELEMENTS.notificationMessage.innerHTML = `<p>${msg}</p>`;
+}
 function formToFormData(form) {
     const formData = new FormData(form);
     const jsonobj = { "sessionID": STATE.sessionID };
@@ -75,6 +83,15 @@ function sendForm(form) {
         return res.json();
     }).then((data) => {
         return data;
+    });
+}
+function setNotificationContainer() {
+    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
+        window.location.reload();
+    });
+    ELEMENTS.notificationBtnClose.addEventListener('click', () => {
+        ELEMENTS.notificationContainer.classList.add('hidden');
+        ELEMENTS.notificationBlur.classList.add('hidden');
     });
 }
 function setClientDropdown() {
@@ -105,11 +122,16 @@ function setClientDropdown() {
         });
     });
 }
-function main() {
-    setClientDropdown();
-    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
-        window.location.reload();
+function setUploadBtn() {
+    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.uploadBtnActual.click();
     });
+    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.uploadBtnActual.files[0];
+        ELEMENTS.uploadFilename.innerText = file.name;
+    });
+}
+function setSubmitBtn() {
     ELEMENTS.form.addEventListener('submit', (event) => __awaiter(this, void 0, void 0, function* () {
         event.preventDefault();
         if (!STATE.sendAllowed) {
@@ -118,14 +140,20 @@ function main() {
         STATE.sendAllowed = false;
         const response = yield sendForm(ELEMENTS.form);
         STATE.sendAllowed = true;
-        console.log(response);
+        if (response.status == "error") {
+            displayNotification(response.error);
+            return;
+        }
+        if (response.status == "ok") {
+            displayNotification("New Spec successfully created.");
+            return;
+        }
     }));
-    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
-        ELEMENTS.uploadBtnActual.click();
-    });
-    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
-        const file = ELEMENTS.uploadBtnActual.files[0];
-        ELEMENTS.uploadFilename.innerText = file.name;
-    });
+}
+function main() {
+    setNotificationContainer();
+    setClientDropdown();
+    setUploadBtn();
+    setSubmitBtn();
 }
 main();
