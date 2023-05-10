@@ -74,7 +74,7 @@ def websocket_app(ws: "WebSocket", remote_addr: str, sessionid: str):
 def index():
     return render_template(f'_home.html', APPVERSION=APPVERSION)
 
-@app.route('/nav/<string: page>')
+@app.route('/nav/<string:page>')
 def nav(page: str):
     return render_template(f'_{page}.html', APPVERSION=APPVERSION)
 
@@ -89,7 +89,7 @@ def upload():
     handler.send()
     return handler.status().json()
 
-@app.route('/query/<string: table>/<string: query>', methods=['GET'])
+@app.route('/query/<string:table>/<string:query>', methods=['GET'])
 def query(table: str, query: str):
     if table.lower() == "clients":
         return client_query(query)

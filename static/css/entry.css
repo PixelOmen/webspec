@@ -15,8 +15,23 @@
 
 .input-simple input {
     font-size: 14pt;
+    padding: 5px 10px;
+    box-sizing: border-box;
+}
+
+.input-dropdown select {
+    background-color: aliceblue;
+    border-radius: 4px;
+    font-size: 14pt;
+    padding: 0;
     padding-left: 10px;
-    padding-right: 10px;
+    margin-bottom: 10px;
+    height: 40px;
+}
+
+.input-dropdown input {
+    font-size: 14pt;
+    padding: 5px 10px;
     box-sizing: border-box;
 }
 

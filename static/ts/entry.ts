@@ -1,5 +1,7 @@
 const ELEMENTS = {
     form: document.getElementById('form-main') as HTMLFormElement,
+    clientSelect: document.getElementById('select-client') as HTMLSelectElement,
+    clientName: document.getElementById('input-clientName') as HTMLInputElement,
     uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
     uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
     uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
@@ -69,7 +71,36 @@ function sendForm(form: HTMLFormElement): Promise<any> {
     });
 }
 
+
+async function setClientDropdown() {
+    const response = await fetch("/query/clients/all")
+        .then((res) => { return res.json(); })
+        .then((data) => { return data; });
+    if (response.status !== "ok") {
+        console.error(response.error);
+        return;
+    }
+    const clients = response.output.clients;
+    clients.forEach((client: any) => {
+        const option = document.createElement('option');
+        option.value = client;
+        option.innerText = client;
+        ELEMENTS.clientSelect.appendChild(option);
+    });
+    ELEMENTS.clientSelect.addEventListener('change', () => {
+        if (ELEMENTS.clientSelect.value != "new") {
+            ELEMENTS.clientName.classList.add('hidden');
+            ELEMENTS.clientName.value = ELEMENTS.clientSelect.value;
+        } else {
+            ELEMENTS.clientName.classList.remove('hidden');
+            ELEMENTS.clientName.value = "";
+        }
+    });
+}
+
+
 function main() {
+    setClientDropdown();
     ELEMENTS.notificationBtnReload.addEventListener('click', () => {
         window.location.reload();
     });

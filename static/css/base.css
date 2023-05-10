@@ -14,6 +14,7 @@
     height: 4em;
     background-color: rgb(16, 176, 174);
     background: linear-gradient(to right, rgb(1, 5, 5) 0px, rgb(16, 176, 174) 180px);
+    border-bottom: solid 2px black;
 }
 
 img#roundaboutSign {

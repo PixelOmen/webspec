@@ -76,7 +76,7 @@ class QueryHandler:
     def __init__(self) -> None:
         self.session = None
 
-    def _get_session(self) -> Session:
+    def _get_session(self) -> "Session":
         if self.session is None:
             self.session = SESSIONFACTORY()
         return self.session

@@ -16,9 +16,12 @@
     <div class="form-container">
         <h2>Client Spec</h2>
         <form id="form-main">
-            <div class="input-simple">
+            <div class="input-dropdown">
                 <label for="client_name">Client</label>
-                <input type="text" name="client_name" style="width: 100%;">
+                <select name="Client" id="select-client" placeholder="test">
+                    <option value="new">New</option>
+                </select>
+                <input type="text" name="client_name" id="input-clientName" style="width: 100%;">
             </div>
             <div class="input-simple section-start">
                 <label for="name">Spec Name</label>

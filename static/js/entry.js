@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const ELEMENTS = {
     form: document.getElementById('form-main'),
+    clientSelect: document.getElementById('select-client'),
+    clientName: document.getElementById('input-clientName'),
     uploadBtnVisual: document.getElementById('input-docUpload-visual'),
     uploadBtnActual: document.getElementById('input-docUpload-actual'),
     uploadFilename: document.getElementById('input-docUpload-filename'),
@@ -75,7 +77,36 @@ function sendForm(form) {
         return data;
     });
 }
+function setClientDropdown() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch("/query/clients/all")
+            .then((res) => { return res.json(); })
+            .then((data) => { return data; });
+        if (response.status !== "ok") {
+            console.error(response.error);
+            return;
+        }
+        const clients = response.output.clients;
+        clients.forEach((client) => {
+            const option = document.createElement('option');
+            option.value = client;
+            option.innerText = client;
+            ELEMENTS.clientSelect.appendChild(option);
+        });
+        ELEMENTS.clientSelect.addEventListener('change', () => {
+            if (ELEMENTS.clientSelect.value != "new") {
+                ELEMENTS.clientName.classList.add('hidden');
+                ELEMENTS.clientName.value = ELEMENTS.clientSelect.value;
+            }
+            else {
+                ELEMENTS.clientName.classList.remove('hidden');
+                ELEMENTS.clientName.value = "";
+            }
+        });
+    });
+}
 function main() {
+    setClientDropdown();
     ELEMENTS.notificationBtnReload.addEventListener('click', () => {
         window.location.reload();
     });
