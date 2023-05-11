@@ -2,6 +2,7 @@ const ELEMENTS = {
     form: document.getElementById('form-main') as HTMLFormElement,
     clientSelect: document.getElementById('select-client') as HTMLSelectElement,
     clientName: document.getElementById('input-clientName') as HTMLInputElement,
+    clientNameContainer: document.getElementById('input-clientName-container') as HTMLInputElement,
     uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
     uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
     uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
@@ -99,6 +100,11 @@ async function setClientDropdown() {
         console.error(response.error);
         return;
     }
+    ELEMENTS.clientSelect.innerHTML = "";
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "new";
+    defaultOption.innerText = "New";
+    ELEMENTS.clientSelect.appendChild(defaultOption);
     const clients = response.output.clients;
     clients.forEach((client: any) => {
         const option = document.createElement('option');
@@ -108,10 +114,10 @@ async function setClientDropdown() {
     });
     ELEMENTS.clientSelect.addEventListener('change', () => {
         if (ELEMENTS.clientSelect.value != "new") {
-            ELEMENTS.clientName.classList.add('hidden');
+            ELEMENTS.clientNameContainer.classList.add('hidden');
             ELEMENTS.clientName.value = ELEMENTS.clientSelect.value;
         } else {
-            ELEMENTS.clientName.classList.remove('hidden');
+            ELEMENTS.clientNameContainer.classList.remove('hidden');
             ELEMENTS.clientName.value = "";
         }
     });
@@ -142,6 +148,7 @@ function setSubmitBtn() {
         }
         if (response.status == "ok") {
             displayNotification("New Spec successfully created.");
+            setClientDropdown();
             return;
         }
     });

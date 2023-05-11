@@ -23,10 +23,11 @@
         <form id="form-main">
             <div class="input-dropdown">
                 <label for="client_name">Client</label>
-                <select name="Client" id="select-client" placeholder="test">
-                    <option value="new">New</option>
-                </select>
-                <input type="text" name="client_name" id="input-clientName" style="width: 100%;">
+                <select name="Client" id="select-client" placeholder="test"></select>
+                <div id="input-clientName-container">
+                    <label for="client_name">New Client Name</label>
+                    <input type="text" name="client_name" id="input-clientName" style="width: 100%;">
+                </div>
             </div>
             <div class="input-simple section-start">
                 <label for="name">Spec Name</label>
