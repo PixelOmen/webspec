@@ -4,9 +4,20 @@
     <title>View Specs</title>
 {% endblock %}
 {% block body %}
-<div class="btn-container">
-    View Specs
-</div>    
+    <div id="table-container">
+        <div id="table-header">
+            <div id="client-select-container">
+                <label for="clientDropdown">Client</label>
+                <select name="clientDropdown" id="client-select-dropdown">
+                    <option value="Placeholder">Loading..</option>
+                </select>
+            </div>
+        </div>
+        <div id="table-items-container">
+            <div class="table-item">Loading...</div>
+        </div>
+    </div>
 {% endblock %}
 {% block script %}
+    <script type="module" src='{{ url_for("static", filename="js/view.js", v=APPVERSION) }}'></script>
 {% endblock %}

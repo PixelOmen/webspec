@@ -2,6 +2,7 @@ import json
 import uuid
 import logging
 import mimetypes
+import urllib.parse
 from typing import TYPE_CHECKING, Callable, Any
 
 from gevent import pywsgi
@@ -91,14 +92,10 @@ def upload():
 
 @app.route('/query/<string:table>/<string:query>', methods=['GET'])
 def query(table: str, query: str):
-    if table.lower() == "clients":
-        return client_query(query)
-    return BackEndResponse(type="query", status="error", error=f"Invalid table name: {table}").json()
-
-def client_query(query: str) -> dict[str, Any]:
-    if query.lower() != "all":
-        return BackEndResponse(type="clientquery", status="error", error=f"Query not implemented: {query}").json()
-    return QueryHandler().all_clients().json()
+    if table.lower() not in QueryHandler.TABLES:
+        return BackEndResponse(type="query", status="error", error=f"Invalid table name: {table}").json()
+    query_str = urllib.parse.unquote(query)
+    return QueryHandler(table=table, query=query_str).run_query().json()
 
 
 if __name__ == '__main__':

@@ -73,7 +73,11 @@ class UploadHandler:
 
 
 class QueryHandler:
-    def __init__(self) -> None:
+    TABLES: list[str] = ["clients", "specs"]
+
+    def __init__(self, table: str, query: str) -> None:
+        self.table = table
+        self.query = query
         self.session = None
 
     def _get_session(self) -> "Session":
@@ -90,8 +94,48 @@ class QueryHandler:
         session = self._get_session()
         clients = session.query(Client).all()
         return clients
+    
+    def _all_specs(self) -> list[Spec]:
+        session = self._get_session()
+        specs = session.query(Spec).all()
+        return specs
+    
+    def _specs_by_client(self, client: str) -> list[Spec]:
+        session = self._get_session()
+        specs = session.query(Spec).filter(Spec.client_name == client).all()
+        return specs
+    
+    def _client_query(self) -> BackEndResponse:
+        if self.query.lower() != "all":
+            return BackEndResponse(type="clientquery", status="error", error=f"Query not implemented: {self.query}")
+        return self.all_clients()
+
+    def _spec_query(self) -> BackEndResponse:
+        if self.query.lower() == "all":
+            return self.all_specs()
+        elif self.query.lower().startswith("client="):
+            return self.specs_by_client(self.query.split("=")[1])
+        return BackEndResponse(type="query", status="error", error=f"Query not implemented: {self.query}")
+    
+    def run_query(self) -> BackEndResponse:
+        if self.table == "clients":
+            return self._client_query()
+        elif self.table == "specs":
+            return self._spec_query()
+        else:
+            return BackEndResponse(type="query", status="error", error="Invalid table name.")
 
     def all_clients(self) -> BackEndResponse:
         clients = self._all_clients()
         self._close_session()
         return BackEndResponse(type="clientquery", output={"clients": [client.name for client in clients]})
+
+    def all_specs(self) -> BackEndResponse:
+        specs = self._all_specs()
+        self._close_session()
+        return BackEndResponse(type="specquery", output={"specs": [spec.as_dict() for spec in specs]})
+    
+    def specs_by_client(self, client: str) -> BackEndResponse:
+        specs = self._specs_by_client(client)
+        self._close_session()
+        return BackEndResponse(type="specquery", output={"specs": [spec.as_dict() for spec in specs]})

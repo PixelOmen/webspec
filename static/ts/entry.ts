@@ -1,3 +1,5 @@
+export {};
+
 const ELEMENTS = {
     form: document.getElementById('form-main') as HTMLFormElement,
     clientSelect: document.getElementById('select-client') as HTMLSelectElement,
@@ -12,7 +14,7 @@ const ELEMENTS = {
     notificationBtnClose: document.getElementById('notification-btn-close') as HTMLButtonElement,
     notificationDisconnect: document.getElementById('notification-container-disconnect') as HTMLDivElement,
     notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement,
-}
+};
 
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -20,20 +22,20 @@ const STATE = {
     sendAllowed: true,
     username: "",
     password: ""
-}
+};
 STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
-}
+};
 STATE.CONNECTION.onclose = () => {
     ELEMENTS.notificationDisconnect.classList.remove('hidden');
     ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
-}
+};
 STATE.CONNECTION.onerror = (e) => {
     ELEMENTS.notificationDisconnect.classList.remove('hidden');
     ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
-}
+};
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
     if (data.type === "sessionID") {
@@ -43,7 +45,7 @@ STATE.CONNECTION.onmessage = (msg) => {
     if (data.type === "debug") {
         console.log(data.msg);
     }
-}
+};
 
 function displayNotification(msg: string) {
     ELEMENTS.notificationContainer.classList.remove('hidden');
@@ -100,11 +102,15 @@ async function setClientDropdown() {
         console.error(response.error);
         return;
     }
+    
     ELEMENTS.clientSelect.innerHTML = "";
     const defaultOption = document.createElement('option');
     defaultOption.value = "new";
     defaultOption.innerText = "New";
     ELEMENTS.clientSelect.appendChild(defaultOption);
+    ELEMENTS.clientNameContainer.classList.remove('hidden');
+    ELEMENTS.clientName.value = "";
+
     const clients = response.output.clients;
     clients.forEach((client: any) => {
         const option = document.createElement('option');

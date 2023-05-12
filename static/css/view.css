@@ -1,0 +1,56 @@
+/* #001d2b */
+/* #0a2532 */
+
+* {
+    font-family: SplashFont;
+}
+
+#table-container {
+    background-color: #001d2b;
+    width: 98%;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    border: 2px solid black;
+    border-radius: 2px;
+    overflow: auto;
+}
+
+#table-header {
+    height: 50px;
+    border-bottom: 1px solid whitesmoke;
+    overflow: hidden;
+}
+
+#client-select-container {
+    width: auto;
+}
+
+#client-select-container select {
+    padding: 0px 10px;
+    width: auto;
+    height: 30px;
+    background-color: #001d2b;
+    color: whitesmoke;
+    border: none;
+    border-radius: 0;
+    outline: none;
+}
+
+#client-select-container label {
+    color: whitesmoke;
+    padding-left: 10px;
+    display: block;
+    font-size: 9pt;
+}
+
+#table-items-container:nth-child(even):hover {
+    background-color: #013b58;
+}
+
+.table-item {
+    padding: 10px;
+    font-size: 10pt;
+    border-bottom: 1px solid grey;
+}

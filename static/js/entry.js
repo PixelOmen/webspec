@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -109,6 +108,8 @@ function setClientDropdown() {
         defaultOption.value = "new";
         defaultOption.innerText = "New";
         ELEMENTS.clientSelect.appendChild(defaultOption);
+        ELEMENTS.clientNameContainer.classList.remove('hidden');
+        ELEMENTS.clientName.value = "";
         const clients = response.output.clients;
         clients.forEach((client) => {
             const option = document.createElement('option');
@@ -164,3 +165,4 @@ function main() {
     setSubmitBtn();
 }
 main();
+export {};
