@@ -33,12 +33,15 @@ STATE.CONNECTION.onerror = (e) => {
 };
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
-    if (data.type === "sessionID") {
-        STATE.sessionID = data.sessionID;
-        return;
-    }
-    if (data.type === "debug") {
-        console.log(data.msg);
+    switch (data.type) {
+        case "sessionID":
+            STATE.sessionID = data.sessionID;
+            break;
+        case "debug":
+            console.log(data.msg);
+            break;
+        default:
+            console.error(`Unknown websocket message type: ${data.type}`);
     }
 };
 
@@ -90,14 +93,15 @@ function setClientDropdown(): void {
             option.innerHTML = client;
             ELEMENTS.clientSelect.appendChild(option);
         }
-        const event = new Event('change');
-        ELEMENTS.clientSelect.dispatchEvent(event);
+        const changeEvent = new Event('change');
+        ELEMENTS.clientSelect.dispatchEvent(changeEvent);
     });
 }
 
 function setTableItems(specs: Spec[]): void {
     ELEMENTS.tableItemsContainer.innerHTML = "";
     for (const spec of specs) {
+        console.log(spec);
         const item = document.createElement('div');
         item.classList.add('table-item');
         item.innerHTML = spec.name;

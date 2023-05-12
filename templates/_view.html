@@ -5,13 +5,23 @@
 {% endblock %}
 {% block body %}
     <div id="table-container">
-        <div id="table-header">
+        <div id="table-controls">
             <div id="client-select-container">
-                <label for="clientDropdown">Client</label>
+                <label for="clientDropdown">Client:</label>
                 <select name="clientDropdown" id="client-select-dropdown">
                     <option value="Placeholder">Loading..</option>
                 </select>
             </div>
+        </div>
+        <div class="table-column-container" id="table-header">
+            <div class="table-header-item table-column">Name</div>
+            <div class="table-header-item table-column">Created</div>
+            <div class="table-header-item table-column">Updated</div>
+            <div class="table-header-item table-column">Resolution</div>
+            <div class="table-header-item table-column">Framerate</div>
+            <div class="table-header-item table-column">Video Codec</div>
+            <div class="table-header-item table-column">Audio Codec</div>
+            <div class="table-header-item table-column">Start TC</div>
         </div>
         <div id="table-items-container">
             <div class="table-item">Loading...</div>

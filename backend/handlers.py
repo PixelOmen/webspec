@@ -118,12 +118,14 @@ class QueryHandler:
         return BackEndResponse(type="query", status="error", error=f"Query not implemented: {self.query}")
     
     def run_query(self) -> BackEndResponse:
+        if self.table not in self.TABLES:
+            return BackEndResponse(type="query", status="error", error=f"Invalid table name: {self.table}")
         if self.table == "clients":
             return self._client_query()
         elif self.table == "specs":
             return self._spec_query()
         else:
-            return BackEndResponse(type="query", status="error", error="Invalid table name.")
+            return BackEndResponse(type="query", status="error", error=f"Table not implemented in run_query: {self.table}")
 
     def all_clients(self) -> BackEndResponse:
         clients = self._all_clients()
