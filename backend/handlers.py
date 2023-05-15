@@ -93,16 +93,19 @@ class QueryHandler:
     def _all_clients(self) -> list[Client]:
         session = self._get_session()
         clients = session.query(Client).all()
+        clients.sort(key=lambda client: client.name) # type: ignore
         return clients
     
     def _all_specs(self) -> list[Spec]:
         session = self._get_session()
         specs = session.query(Spec).all()
+        specs.sort(key=lambda spec: spec.name) # type: ignore
         return specs
     
     def _specs_by_client(self, client: str) -> list[Spec]:
         session = self._get_session()
         specs = session.query(Spec).filter(Spec.client_name == client).all()
+        specs.sort(key=lambda spec: spec.name) # type: ignore
         return specs
     
     def _client_query(self) -> BackEndResponse:

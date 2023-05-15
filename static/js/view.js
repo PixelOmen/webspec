@@ -15,6 +15,7 @@ const ELEMENTS = {
     notificationDisconnect: document.getElementById('notification-container-disconnect'),
     notificationBtnReload: document.getElementById('notification-btn-reload'),
     tableItemsContainer: document.getElementById('table-items-container'),
+    tableHeaders: document.getElementById('table-headers'),
     clientSelect: document.getElementById('client-select-dropdown')
 };
 const STATE = {
@@ -81,17 +82,63 @@ function setClientDropdown() {
         ELEMENTS.clientSelect.dispatchEvent(changeEvent);
     });
 }
+function createTableColumn(client, row, column, value, container) {
+    const columnDiv = document.createElement('div');
+    columnDiv.id = `table-item-${client}-${row}-${column}`;
+    columnDiv.classList.add('table-column');
+    columnDiv.innerHTML = value ? value : "N/A";
+    container.appendChild(columnDiv);
+}
 function setTableItems(specs) {
     ELEMENTS.tableItemsContainer.innerHTML = "";
+    let row = 1;
     for (const spec of specs) {
-        console.log(spec);
         const item = document.createElement('div');
         item.classList.add('table-item');
-        item.innerHTML = spec.name;
+        item.classList.add('table-column-container');
+        createTableColumn(spec.client_name, row, 1, spec.name, item);
+        createTableColumn(spec.client_name, row, 2, spec.created, item);
+        createTableColumn(spec.client_name, row, 3, spec.updated, item);
+        createTableColumn(spec.client_name, row, 4, spec.resolution, item);
+        createTableColumn(spec.client_name, row, 5, spec.framerate, item);
+        createTableColumn(spec.client_name, row, 6, spec.video_codec, item);
+        createTableColumn(spec.client_name, row, 7, spec.audio_codec, item);
+        createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
+        row++;
     }
+    setColumnWidths();
+}
+function setColumnWidths() {
+    const maxColumnWidths = {};
+    const totalColumns = ELEMENTS.tableHeaders.childElementCount;
+    for (let i = 0; i < totalColumns; i++) {
+        maxColumnWidths[i] = 0;
+    }
+    const rows = document.querySelectorAll('.table-column-container');
+    rows.forEach((row) => {
+        if (row == ELEMENTS.tableHeaders) {
+            return;
+        }
+        const columns = row.querySelectorAll('.table-column');
+        columns.forEach((column, index) => {
+            const columnDiv = column;
+            const currentWidth = Math.round(columnDiv.offsetWidth);
+            if (currentWidth > maxColumnWidths[index]) {
+                maxColumnWidths[index] = currentWidth;
+            }
+        });
+    });
+    rows.forEach((row) => {
+        const columns = row.querySelectorAll('.table-column');
+        const columnDiv = columns[0];
+        columnDiv.style.minWidth = `${maxColumnWidths[0]}px`;
+    });
 }
 function main() {
+    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
+        window.location.reload();
+    });
     setClientDropdown();
 }
 main();

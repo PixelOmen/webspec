@@ -3,6 +3,7 @@
 }
 
 #table-container {
+    font-size: 10pt;
     background-color: #001d2b;
     min-width: 300px;
     max-width: 98%;
@@ -20,6 +21,8 @@
     height: 40px;
     border-bottom: 1px solid whitesmoke;
     overflow: hidden;
+    min-width: 1386px;
+    max-width: 100%;
 }
 
 #client-select-container {
@@ -40,20 +43,19 @@
 #client-select-container label {
     color: whitesmoke;
     padding-left: 10px;
-    /* display: block; */
     font-size: 9pt;
 }
 
-#table-header {
-    font-size: 10pt;
-    padding: 10px 10px;
+#table-headers {
+    padding: 0px 10px;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
     border-bottom: 1px solid whitesmoke;
-    min-width: fit-content;
-    max-width: 98.8%;
+    min-width: 1386px;
+    max-width: 100%;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .table-header-item {
@@ -61,40 +63,55 @@
     white-space: nowrap;
 }
 
-/* .table-column {
-    border: 1px solid yellow;
-} */
+.table-column-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-column {
+    white-space: nowrap;
+    padding: 10px 20px;
+    text-align: center;
+    text-overflow: ellipsis;
+    /* border: 1px solid yellow; */
+    box-sizing: border-box;
+    overflow: hidden;
+}
 
 .table-column-container .table-column:nth-child(1) {
-    min-width: 300px;
+    min-width: 100px;
 }
 
 .table-column-container .table-column:nth-child(2) {
-    min-width: 150px;
+    width: 200px;
 }
 
 .table-column-container .table-column:nth-child(3) {
-    min-width: 150px;
+    width: 200px;
 }
 
 .table-column-container .table-column:nth-child(4) {
-    min-width: 150px;
+    min-width: 120px;
+    max-width: 300px;
 }
 
 .table-column-container .table-column:nth-child(5) {
-    min-width: 100px;
+    min-width: 120px;
+    max-width: 300px;
 }
 
 .table-column-container .table-column:nth-child(6) {
-    min-width: 200px;
+    min-width: 130px;
+    max-width: 300px;
 }
 
 .table-column-container .table-column:nth-child(7) {
-    min-width: 200px;
+    min-width: 130px;
+    max-width: 300px;
 }
 
 .table-column-container .table-column:nth-child(8) {
-    min-width: 100px;
+    width: 120px;
 }
 
 #table-items-container {
@@ -105,10 +122,10 @@
 }
 
 .table-item {
+    padding: 0px 10px;
     white-space: nowrap;
-    padding: 10px;
-    font-size: 10pt;
     border-bottom: 1px solid grey;
+    cursor: pointer;
 }
 
 .table-item:nth-child(odd) {

@@ -6,9 +6,7 @@ from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-spec = session.query(Spec).filter_by(name="Test Spec").first()
-if spec is None:
-    exit()
-localtz = ZoneInfo("America/Los_Angeles")
-print(type(spec.updated.astimezone(localtz)))
+spec = session.query(Spec).filter_by(name="Some NBC Spec").first()
+session.delete(spec)
+session.commit()
 session.close()
