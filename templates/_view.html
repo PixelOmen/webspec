@@ -27,6 +27,16 @@
             <div class="table-item">Loading...</div>
         </div>
     </div>
+    <div id="details-full-container">
+        <div class="details-item" id="details-general"></div>
+        <div class="details-item" id="details-formatting"></div>
+        <div class="details-item" id="details-video"></div>
+        <div class="details-item" id="details-audio"></div>
+        <div class="details-item" id="details-subcap"></div>
+        <div class="details-item" id="details-metadata"></div>
+        <div class="details-item" id="details-additional"></div>
+        <div class="details-item" id="details-notes"></div>
+    </div>
 {% endblock %}
 {% block script %}
     <script type="module" src='{{ url_for("static", filename="js/view.js", v=APPVERSION) }}'></script>

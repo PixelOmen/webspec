@@ -1,3 +1,4 @@
+import * as detailedView from './libs/detailedview.js';
 export {};
 
 const ELEMENTS = {
@@ -58,13 +59,8 @@ interface SpecResponse {
     type: string;
     error: string;
     output: {
-        "specs": Spec[];
+        "specs": detailedView.Spec[];
     }
-}
-
-interface Spec {
-    [key: string]: any;
-    source: string; //Base64 encoded string
 }
 
 async function fetchClients(): Promise<ClientResponse> {
@@ -107,7 +103,7 @@ function createTableColumn(client: string, row: number, column: number, value: s
     container.appendChild(columnDiv);
 }
 
-function setTableItems(specs: Spec[]): void {
+function setTableItems(specs: detailedView.Spec[]): void {
     ELEMENTS.tableItemsContainer.innerHTML = "";
     let row = 1;
     for (const spec of specs) {
@@ -123,6 +119,9 @@ function setTableItems(specs: Spec[]): void {
         createTableColumn(spec.client_name, row, 7, spec.audio_codec, item);
         createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
+        item.addEventListener('click', () => {
+            detailedView.display(spec);
+        });
         row++;
     }
     setColumnWidths();

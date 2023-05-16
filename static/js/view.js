@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import * as detailedView from './libs/detailedview.js';
 const ELEMENTS = {
     notificationBlur: document.getElementById('notification-blur'),
     notificationContainer: document.getElementById('notification-container-generic'),
@@ -105,6 +106,9 @@ function setTableItems(specs) {
         createTableColumn(spec.client_name, row, 7, spec.audio_codec, item);
         createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
+        item.addEventListener('click', () => {
+            detailedView.display(spec);
+        });
         row++;
     }
     setColumnWidths();
@@ -142,4 +146,3 @@ function main() {
     setClientDropdown();
 }
 main();
-export {};
