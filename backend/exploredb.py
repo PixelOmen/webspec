@@ -6,7 +6,5 @@ from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-spec = session.query(Spec).filter_by(name="Some NBC Spec").first()
-session.delete(spec)
 session.commit()
 session.close()

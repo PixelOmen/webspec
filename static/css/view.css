@@ -149,7 +149,6 @@
 }
 
 .details-subItem-container {
-    /* flex: 1; */
     font-size: 10pt;
     margin-right: 20px;
     margin-bottom: 1.5rem;
@@ -162,8 +161,8 @@
     box-sizing: border-box;
 }
 
-.details-subItem-container p {
-}
+/* .details-subItem-container p {
+} */
 
 .details-subItem-block {
     flex-basis: 100%;

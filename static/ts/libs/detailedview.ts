@@ -58,8 +58,8 @@ function createTextSubItem(label: string, value: string, oneline?: boolean): HTM
 
 function general(spec: Spec): void {
     const sectionContainer = createSection("General", ELEMENTS.general);
-    sectionContainer.append(createTextSubItem("Created", spec.created));
-    sectionContainer.append(createTextSubItem("Updated", spec.updated));
     sectionContainer.append(createTextSubItem("Name", spec.name, true));
     sectionContainer.append(createTextSubItem("Description", spec.description, true));
+    sectionContainer.append(createTextSubItem("Created", spec.created));
+    sectionContainer.append(createTextSubItem("Updated", spec.updated));
 }

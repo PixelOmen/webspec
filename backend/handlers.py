@@ -17,6 +17,7 @@ class UploadHandler:
 
     def _handle_source(self) -> None:
         source = self.files.get("source")
+        self.jsondata["source_filename"] = source.filename if source else None
         self.jsondata["source"] = source.read() if source else None
 
     def _handle_spec_name(self, session: "Session") -> None:
@@ -138,9 +139,9 @@ class QueryHandler:
     def all_specs(self) -> BackEndResponse:
         specs = self._all_specs()
         self._close_session()
-        return BackEndResponse(type="specquery", output={"specs": [spec.as_dict() for spec in specs]})
+        return BackEndResponse(type="specquery", output={"specs": [spec.jsondict() for spec in specs]})
     
     def specs_by_client(self, client: str) -> BackEndResponse:
         specs = self._specs_by_client(client)
         self._close_session()
-        return BackEndResponse(type="specquery", output={"specs": [spec.as_dict() for spec in specs]})
+        return BackEndResponse(type="specquery", output={"specs": [spec.jsondict() for spec in specs]})
