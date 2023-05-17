@@ -2,6 +2,10 @@
     font-family: SplashFont;
 }
 
+ a {
+    color: lightblue;
+ }
+
 #table-container {
     font-size: 10pt;
     background-color: #001d2b;

@@ -55,6 +55,40 @@ function createTextSubItem(label: string, value: string, oneline?: boolean): HTM
     return subItemContainer;
 }
 
+function base64ToBinary(b64str: string): Uint8Array {
+    const decodedString = atob(b64str);
+    const binaryData = new Uint8Array(decodedString.length);
+    for (let i = 0; i < decodedString.length; i++) {
+        binaryData[i] = decodedString.charCodeAt(i);
+    }
+    return binaryData;
+}
+
+function base64ToURL(b64str: string, apptype?: string): string {
+    const apptypeStr = apptype ? apptype : 'application/pdf';
+    const binaryData = base64ToBinary(b64str);
+    const url = URL.createObjectURL(new Blob([binaryData], { type: apptypeStr }));
+    return url;
+}
+
+function createFileSubItem(label: string, filename: string, base64str: string, oneline?: boolean): HTMLDivElement {
+    const fileURL = base64ToURL(base64str);
+    const subItemContainer = document.createElement('div');
+    subItemContainer.classList.add('details-subItem-container');
+    const labelElem = document.createElement('label');
+    labelElem.innerText = label;
+    subItemContainer.append(labelElem);
+    const fileAnchor = document.createElement('a');
+    fileAnchor.target = "_blank";
+    fileAnchor.href = fileURL;
+    fileAnchor.innerText = filename;
+    subItemContainer.append(fileAnchor);
+    if (oneline) {
+        subItemContainer.classList.add('details-subItem-block');
+    }
+    return subItemContainer;
+}
+
 
 function general(spec: Spec): void {
     const sectionContainer = createSection("General", ELEMENTS.general);
@@ -62,4 +96,5 @@ function general(spec: Spec): void {
     sectionContainer.append(createTextSubItem("Description", spec.description, true));
     sectionContainer.append(createTextSubItem("Created", spec.created));
     sectionContainer.append(createTextSubItem("Updated", spec.updated));
+    sectionContainer.append(createFileSubItem("Source", spec.source_filename, spec.source));
 }
