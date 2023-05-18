@@ -8,11 +8,11 @@ const ELEMENTS = {
     subcap: document.getElementById('details-subcap'),
     metadata: document.getElementById('details-metadata'),
     additional: document.getElementById('details-additional'),
-    notes: document.getElementById('details-notes')
 };
 function display(spec) {
     clear();
     general(spec);
+    formatting(spec);
 }
 function clear() {
     for (const section in ELEMENTS) {
@@ -38,11 +38,28 @@ function createTextSubItem(label, value, oneline) {
     labelElem.innerText = label;
     subItemContainer.append(labelElem);
     const subItemValue = document.createElement('p');
-    subItemValue.innerText = value;
+    subItemValue.innerText = value ? value : "N/A";
     subItemContainer.append(subItemValue);
     if (oneline) {
         subItemContainer.classList.add('details-subItem-block');
     }
+    return subItemContainer;
+}
+function createIsRequiredSubItem(label, required, details) {
+    const subItemContainer = document.createElement('div');
+    subItemContainer.classList.add('details-subItem-container');
+    const labelElem = document.createElement('label');
+    labelElem.innerText = label;
+    subItemContainer.append(labelElem);
+    const subItemValue = document.createElement('p');
+    if (required) {
+        subItemContainer.classList.add('details-subItem-block');
+        subItemValue.innerText = details ? details : "Required";
+    }
+    else {
+        subItemValue.innerText = "N/A";
+    }
+    subItemContainer.append(subItemValue);
     return subItemContainer;
 }
 function base64ToBinary(b64str) {
@@ -60,6 +77,9 @@ function base64ToURL(b64str, apptype) {
     return url;
 }
 function createFileSubItem(label, filename, base64str, oneline) {
+    if (!filename) {
+        return createTextSubItem(label, "N/A", oneline);
+    }
     const fileURL = base64ToURL(base64str);
     const subItemContainer = document.createElement('div');
     subItemContainer.classList.add('details-subItem-container');
@@ -78,9 +98,15 @@ function createFileSubItem(label, filename, base64str, oneline) {
 }
 function general(spec) {
     const sectionContainer = createSection("General", ELEMENTS.general);
-    sectionContainer.append(createTextSubItem("Name", spec.name, true));
-    sectionContainer.append(createTextSubItem("Description", spec.description, true));
+    sectionContainer.append(createTextSubItem("Client", spec.client_name));
+    sectionContainer.append(createTextSubItem("Spec", spec.name));
     sectionContainer.append(createTextSubItem("Created", spec.created));
     sectionContainer.append(createTextSubItem("Updated", spec.updated));
     sectionContainer.append(createFileSubItem("Source", spec.source_filename, spec.source));
+    sectionContainer.append(createTextSubItem("Description", spec.description, true));
+}
+function formatting(spec) {
+    const formattingContainer = createSection("Formatting", ELEMENTS.formatting);
+    formattingContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
+    formattingContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details));
 }

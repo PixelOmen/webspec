@@ -5,7 +5,7 @@ interface Spec {
     source: string; //Base64 encoded string
 }
 
-const ELEMENTS: { [key: string]: HTMLDivElement} = {
+const ELEMENTS: { [key: string]: HTMLDivElement } = {
     container: document.getElementById('details-full-container') as HTMLDivElement,
     general: document.getElementById('details-general') as HTMLDivElement,
     formatting: document.getElementById('details-formatting') as HTMLDivElement,
@@ -14,12 +14,13 @@ const ELEMENTS: { [key: string]: HTMLDivElement} = {
     subcap: document.getElementById('details-subcap') as HTMLDivElement,
     metadata: document.getElementById('details-metadata') as HTMLDivElement,
     additional: document.getElementById('details-additional') as HTMLDivElement,
-    notes: document.getElementById('details-notes') as HTMLDivElement
 }
+
 
 function display(spec: Spec): void {
     clear();
     general(spec);
+    formatting(spec);
 }
 
 function clear(): void {
@@ -28,6 +29,7 @@ function clear(): void {
         ELEMENTS[section].innerHTML = "";
     }
 }
+
 
 function createSection(name: string, parent: HTMLDivElement): HTMLDivElement {
     const sectionHeader = document.createElement('h2');
@@ -47,11 +49,28 @@ function createTextSubItem(label: string, value: string, oneline?: boolean): HTM
     labelElem.innerText = label;
     subItemContainer.append(labelElem);
     const subItemValue = document.createElement('p');
-    subItemValue.innerText = value;
+    subItemValue.innerText = value ? value : "N/A";
     subItemContainer.append(subItemValue);
     if (oneline) {
         subItemContainer.classList.add('details-subItem-block');
     }
+    return subItemContainer;
+}
+
+function createIsRequiredSubItem(label: string, required: boolean, details: string): HTMLDivElement {
+    const subItemContainer = document.createElement('div');
+    subItemContainer.classList.add('details-subItem-container');
+    const labelElem = document.createElement('label');
+    labelElem.innerText = label;
+    subItemContainer.append(labelElem);
+    const subItemValue = document.createElement('p');
+    if (required) { 
+        subItemContainer.classList.add('details-subItem-block');
+        subItemValue.innerText = details ? details : "Required";
+    } else {
+        subItemValue.innerText = "N/A";       
+    }
+    subItemContainer.append(subItemValue);
     return subItemContainer;
 }
 
@@ -72,6 +91,9 @@ function base64ToURL(b64str: string, apptype?: string): string {
 }
 
 function createFileSubItem(label: string, filename: string, base64str: string, oneline?: boolean): HTMLDivElement {
+    if (!filename) {
+        return createTextSubItem(label, "N/A", oneline);
+    }
     const fileURL = base64ToURL(base64str);
     const subItemContainer = document.createElement('div');
     subItemContainer.classList.add('details-subItem-container');
@@ -92,9 +114,16 @@ function createFileSubItem(label: string, filename: string, base64str: string, o
 
 function general(spec: Spec): void {
     const sectionContainer = createSection("General", ELEMENTS.general);
-    sectionContainer.append(createTextSubItem("Name", spec.name, true));
-    sectionContainer.append(createTextSubItem("Description", spec.description, true));
+    sectionContainer.append(createTextSubItem("Client", spec.client_name));
+    sectionContainer.append(createTextSubItem("Spec", spec.name));
     sectionContainer.append(createTextSubItem("Created", spec.created));
     sectionContainer.append(createTextSubItem("Updated", spec.updated));
     sectionContainer.append(createFileSubItem("Source", spec.source_filename, spec.source));
+    sectionContainer.append(createTextSubItem("Description", spec.description, true));
+}
+
+function formatting(spec: Spec): void {
+    const formattingContainer = createSection("Formatting", ELEMENTS.formatting);
+    formattingContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
+    formattingContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details));
 }
