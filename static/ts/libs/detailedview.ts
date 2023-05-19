@@ -6,7 +6,6 @@ const ELEMENTS: { [key: string]: HTMLDivElement } = {
     formatting: document.getElementById('details-formatting') as HTMLDivElement,
     video: document.getElementById('details-video') as HTMLDivElement,
     audio: document.getElementById('details-audio') as HTMLDivElement,
-    subcap: document.getElementById('details-subcap') as HTMLDivElement,
     metadata: document.getElementById('details-metadata') as HTMLDivElement,
     additional: document.getElementById('details-additional') as HTMLDivElement
 }
@@ -41,17 +40,24 @@ function createSubItem(label: string): {"container": HTMLDivElement, "value": HT
     };
 }
 
-function createTextSubItem(label: string, value: string, forceOneLine?: boolean,
-                                                            center?: boolean): HTMLDivElement {
+function createTextSubItem(label: string, value: string, oneLine?: boolean,
+                            center?: boolean, emptyOneLine?: boolean): HTMLDivElement {
     const subItem = createSubItem(label);
     subItem.value.innerText = value ? value : "N/A";
     subItem.container.append(subItem.value);
-    if (forceOneLine && value) {
+    if ((oneLine && value) || (emptyOneLine && !value)) {
         subItem.container.classList.add('details-subItem-block');
     }
     if (center || !value) {
         subItem.value.style.textAlign = "center";
     }
+    return subItem.container;
+}
+
+function createBoolSubItem(label: string, value: boolean): HTMLDivElement {
+    const subItem = createSubItem(label);
+    subItem.value.innerText = value ? "Required" : "N/A";
+    subItem.value.style.textAlign = "center";
     return subItem.container;
 }
 
@@ -128,12 +134,19 @@ function general(spec: Spec): void {
 function formatting(spec: Spec): void {
     const sectionContainer = createSection("Formatting", ELEMENTS.formatting);
     sectionContainer.append(createTextSubItem("Start Timecode", spec.start_timecode, false, true));
-    sectionContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required,
-                                                                                spec.act_breaks_details, true));
+    sectionContainer.append(createBoolSubItem("Dropframe", spec.dropframe));
     sectionContainer.append(createTextSubItem("Naming Convention", spec.naming_convention, true));
     sectionContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
-    sectionContainer.append(createIsRequiredSubItem("Slate", spec.slate_required, spec.slate_details, true));
-    sectionContainer.append(createIsRequiredSubItem("Burn-ins", spec.burnins_required, spec.burnins_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Slate", spec.slate_required,
+                                                                spec.slate_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Burn-ins", spec.burnins_required,
+                                                                spec.burnins_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Forensic", spec.watermark_required,
+                                                                spec.watermark_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Subtitles/Captions", spec.subcap_required,
+                                                                        spec.subcap_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required,
+                                                                            spec.act_breaks_details, true));
 }
 
 function video(spec: Spec): void {
@@ -154,14 +167,31 @@ function audio(spec: Spec): void {
     sectionContainer.append(createTextSubItem("Profile", spec.audio_codec_profile, false, true));
     sectionContainer.append(createTextSubItem("Bitrate", spec.audio_bitrate, false, true));
     sectionContainer.append(createTextSubItem("Bitdepth", spec.audio_bitdepth, false, true));
+    sectionContainer.append(createBoolSubItem("LKFS", spec.lkfs));
+    sectionContainer.append(createIsRequiredSubItem("Audio Description (AD)", spec.audio_description_required,
+                                                                        spec.audio_description_details, true));
     sectionContainer.append(createTextSubItem("Audio Config", spec.audio_config, true));
     sectionContainer.append(createTextSubItem("Audio Details", spec.audio_details));
-    sectionContainer.append(createIsRequiredSubItem("Audio Description", spec.audio_description_required,
-                                                                        spec.audio_description_details, true));
 }
 
-function subcap(spec: Spec): void {
-    const sectionContainer = createSection("Subtitles / Captions", ELEMENTS.subcap);
+function metadata(spec: Spec): void {
+    const sectionContainer = createSection("Metadata", ELEMENTS.metadata);
+    sectionContainer.append(createBoolSubItem("QT Audio Flags", spec.audio_flags));
+    sectionContainer.append(createBoolSubItem("V-chip", spec.vchip));
+    sectionContainer.append(createBoolSubItem("AFD", spec.afd));
+    sectionContainer.append(createIsRequiredSubItem("HDR Metadata", spec.hdr_metadata_required,
+                                                                    spec.hdr_metadata_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Streaming Flags", spec.streaming_flags_required,
+                                                                    spec.streaming_flags_details, true));
+}
+
+function additional(spec: Spec): void {
+    const sectionContainer = createSection("Additional", ELEMENTS.additional);
+    sectionContainer.append(createIsRequiredSubItem("Artwork", spec.artwork_required,
+                                                                spec.artwork_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Reports/Forms", spec.reports_required,
+                                                                    spec.reports_details, true));
+    sectionContainer.append(createTextSubItem("Notes", spec.notes, true, false, true));
 }
 
 
@@ -178,5 +208,6 @@ function display(spec: Spec): void {
     formatting(spec);
     video(spec);
     audio(spec);
-    subcap(spec);
+    metadata(spec);
+    additional(spec);
 }
