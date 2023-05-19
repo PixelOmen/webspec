@@ -83,8 +83,8 @@ function setClientDropdown(): void {
         const clientSpecs = await fetchSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
     });
-    fetchClients().then((clients) => {
-        for (const client of clients.output.clients) {
+    fetchClients().then((res) => {
+        for (const client of res.output.clients) {
             const option = document.createElement('option');
             option.value = client;
             option.innerHTML = client;
@@ -95,7 +95,8 @@ function setClientDropdown(): void {
     });
 }
 
-function createTableColumn(client: string, row: number, column: number, value: string | null, container: HTMLDivElement): void {
+function createTableColumn(client: string, row: number, column: number,
+                            value: string | null, container: HTMLDivElement): void {
     const columnDiv = document.createElement('div');
     columnDiv.id = `table-item-${client}-${row}-${column}`;
     columnDiv.classList.add('table-column');

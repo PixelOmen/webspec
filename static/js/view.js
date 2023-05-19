@@ -72,8 +72,8 @@ function setClientDropdown() {
         const clientSpecs = yield fetchSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
     }));
-    fetchClients().then((clients) => {
-        for (const client of clients.output.clients) {
+    fetchClients().then((res) => {
+        for (const client of res.output.clients) {
             const option = document.createElement('option');
             option.value = client;
             option.innerHTML = client;

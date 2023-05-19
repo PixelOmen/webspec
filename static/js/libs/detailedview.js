@@ -7,21 +7,8 @@ const ELEMENTS = {
     audio: document.getElementById('details-audio'),
     subcap: document.getElementById('details-subcap'),
     metadata: document.getElementById('details-metadata'),
-    additional: document.getElementById('details-additional'),
+    additional: document.getElementById('details-additional')
 };
-function display(spec) {
-    clear();
-    general(spec);
-    formatting(spec);
-    video(spec);
-}
-function clear() {
-    for (const section in ELEMENTS) {
-        if (ELEMENTS[section] == ELEMENTS.container)
-            continue;
-        ELEMENTS[section].innerHTML = "";
-    }
-}
 function createSection(name, parent) {
     const sectionHeader = document.createElement('h2');
     sectionHeader.classList.add('details-section-header');
@@ -32,44 +19,46 @@ function createSection(name, parent) {
     parent.append(sectionContainer);
     return sectionContainer;
 }
-function createTextSubItem(label, value, forceOneLine, center) {
+function createSubItem(label) {
     const subItemContainer = document.createElement('div');
     subItemContainer.classList.add('details-subItem-container');
     const labelElem = document.createElement('label');
     labelElem.innerText = label;
     subItemContainer.append(labelElem);
     const subItemValue = document.createElement('p');
-    subItemValue.innerText = value ? value : "N/A";
     subItemContainer.append(subItemValue);
+    return {
+        "container": subItemContainer,
+        "value": subItemValue
+    };
+}
+function createTextSubItem(label, value, forceOneLine, center) {
+    const subItem = createSubItem(label);
+    subItem.value.innerText = value ? value : "N/A";
+    subItem.container.append(subItem.value);
     if (forceOneLine && value) {
-        subItemContainer.classList.add('details-subItem-block');
+        subItem.container.classList.add('details-subItem-block');
     }
     if (center || !value) {
-        subItemValue.style.textAlign = "center";
+        subItem.value.style.textAlign = "center";
     }
-    return subItemContainer;
+    return subItem.container;
 }
 function createIsRequiredSubItem(label, required, details, forceOneLine, center) {
-    const subItemContainer = document.createElement('div');
-    subItemContainer.classList.add('details-subItem-container');
-    const labelElem = document.createElement('label');
-    labelElem.innerText = label;
-    subItemContainer.append(labelElem);
-    const subItemValue = document.createElement('p');
-    subItemContainer.append(subItemValue);
+    const subItem = createSubItem(label);
     if (required) {
-        subItemValue.innerText = details ? details : "Required";
+        subItem.value.innerText = details ? details : "Required";
     }
     else {
-        subItemValue.innerText = "N/A";
+        subItem.value.innerText = "N/A";
     }
     if (forceOneLine && details) {
-        subItemContainer.classList.add('details-subItem-block');
+        subItem.container.classList.add('details-subItem-block');
     }
     if (center || !details) {
-        subItemValue.style.textAlign = "center";
+        subItem.value.style.textAlign = "center";
     }
-    return subItemContainer;
+    return subItem.container;
 }
 function base64ToBinary(b64str) {
     const decodedString = atob(b64str);
@@ -120,13 +109,50 @@ function general(spec) {
     sectionContainer.append(createTextSubItem("Description", spec.description, true));
 }
 function formatting(spec) {
-    const formattingContainer = createSection("Formatting", ELEMENTS.formatting);
-    formattingContainer.append(createTextSubItem("Start Timecode", spec.start_timecode, false, true));
-    formattingContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details, true));
-    formattingContainer.append(createTextSubItem("Naming Convention", spec.naming_convention, true));
-    formattingContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
-    formattingContainer.append(createIsRequiredSubItem("Slate", spec.slate_required, spec.slate_details, true));
+    const sectionContainer = createSection("Formatting", ELEMENTS.formatting);
+    sectionContainer.append(createTextSubItem("Start Timecode", spec.start_timecode, false, true));
+    sectionContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details, true));
+    sectionContainer.append(createTextSubItem("Naming Convention", spec.naming_convention, true));
+    sectionContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
+    sectionContainer.append(createIsRequiredSubItem("Slate", spec.slate_required, spec.slate_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Burn-ins", spec.burnins_required, spec.burnins_details, true));
 }
-function video(sepc) {
-    const formattingContainer = createSection("Video", ELEMENTS.video);
+function video(spec) {
+    const sectionContainer = createSection("Video", ELEMENTS.video);
+    sectionContainer.append(createTextSubItem("Resolution", spec.resolution, false, true));
+    sectionContainer.append(createTextSubItem("Aspect Ratio", spec.aspect_ratio, false, true));
+    sectionContainer.append(createTextSubItem("Framerate", spec.framerate, false, true));
+    sectionContainer.append(createTextSubItem("Codec", spec.video_codec, false, true));
+    sectionContainer.append(createTextSubItem("Profile", spec.video_codec_profile, false, true));
+    sectionContainer.append(createTextSubItem("Bitrate", spec.video_bitrate, false, true));
+    sectionContainer.append(createTextSubItem("Bitdepth", spec.video_bitdepth, false, true));
+    sectionContainer.append(createTextSubItem("Colorspace", spec.colorspace, false, true));
+}
+function audio(spec) {
+    const sectionContainer = createSection("Audio", ELEMENTS.audio);
+    sectionContainer.append(createTextSubItem("Codec", spec.audio_codec, false, true));
+    sectionContainer.append(createTextSubItem("Profile", spec.audio_codec_profile, false, true));
+    sectionContainer.append(createTextSubItem("Bitrate", spec.audio_bitrate, false, true));
+    sectionContainer.append(createTextSubItem("Bitdepth", spec.audio_bitdepth, false, true));
+    sectionContainer.append(createTextSubItem("Audio Config", spec.audio_config, true));
+    sectionContainer.append(createTextSubItem("Audio Details", spec.audio_details));
+    sectionContainer.append(createIsRequiredSubItem("Audio Description", spec.audio_description_required, spec.audio_description_details, true));
+}
+function subcap(spec) {
+    const sectionContainer = createSection("Subtitles / Captions", ELEMENTS.subcap);
+}
+function clear() {
+    for (const section in ELEMENTS) {
+        if (ELEMENTS[section] == ELEMENTS.container)
+            continue;
+        ELEMENTS[section].innerHTML = "";
+    }
+}
+function display(spec) {
+    clear();
+    general(spec);
+    formatting(spec);
+    video(spec);
+    audio(spec);
+    subcap(spec);
 }
