@@ -21,6 +21,7 @@ function display(spec: Spec): void {
     clear();
     general(spec);
     formatting(spec);
+    video(spec);
 }
 
 function clear(): void {
@@ -42,7 +43,7 @@ function createSection(name: string, parent: HTMLDivElement): HTMLDivElement {
     return sectionContainer;
 }
 
-function createTextSubItem(label: string, value: string, oneline?: boolean): HTMLDivElement {
+function createTextSubItem(label: string, value: string, forceOneLine?: boolean, center?: boolean): HTMLDivElement {
     const subItemContainer = document.createElement('div');
     subItemContainer.classList.add('details-subItem-container');
     const labelElem = document.createElement('label');
@@ -51,26 +52,34 @@ function createTextSubItem(label: string, value: string, oneline?: boolean): HTM
     const subItemValue = document.createElement('p');
     subItemValue.innerText = value ? value : "N/A";
     subItemContainer.append(subItemValue);
-    if (oneline) {
+    if (forceOneLine && value) {
         subItemContainer.classList.add('details-subItem-block');
+    }
+    if (center || !value) {
+        subItemValue.style.textAlign = "center";
     }
     return subItemContainer;
 }
 
-function createIsRequiredSubItem(label: string, required: boolean, details: string): HTMLDivElement {
+function createIsRequiredSubItem(label: string, required: boolean, details: string, forceOneLine?: boolean, center?: boolean): HTMLDivElement {
     const subItemContainer = document.createElement('div');
     subItemContainer.classList.add('details-subItem-container');
     const labelElem = document.createElement('label');
     labelElem.innerText = label;
     subItemContainer.append(labelElem);
     const subItemValue = document.createElement('p');
+    subItemContainer.append(subItemValue);
     if (required) { 
-        subItemContainer.classList.add('details-subItem-block');
         subItemValue.innerText = details ? details : "Required";
     } else {
         subItemValue.innerText = "N/A";       
     }
-    subItemContainer.append(subItemValue);
+    if (forceOneLine && details) {
+        subItemContainer.classList.add('details-subItem-block');
+    }
+    if (center || !details) {
+        subItemValue.style.textAlign = "center";
+    }
     return subItemContainer;
 }
 
@@ -101,9 +110,13 @@ function createFileSubItem(label: string, filename: string, base64str: string, o
     labelElem.innerText = label;
     subItemContainer.append(labelElem);
     const fileAnchor = document.createElement('a');
-    fileAnchor.target = "_blank";
     fileAnchor.href = fileURL;
     fileAnchor.innerText = filename;
+    if (navigator.userAgent.indexOf("Edg") < 0 && navigator.userAgent.indexOf("Chrome") < 0) {
+        fileAnchor.download = filename;
+    } else {
+        fileAnchor.target = "_blank";
+    }
     subItemContainer.append(fileAnchor);
     if (oneline) {
         subItemContainer.classList.add('details-subItem-block');
@@ -124,6 +137,13 @@ function general(spec: Spec): void {
 
 function formatting(spec: Spec): void {
     const formattingContainer = createSection("Formatting", ELEMENTS.formatting);
+    formattingContainer.append(createTextSubItem("Start Timecode", spec.start_timecode, false, true));
+    formattingContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details, true));
+    formattingContainer.append(createTextSubItem("Naming Convention", spec.naming_convention, true));
     formattingContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
-    formattingContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details));
+    formattingContainer.append(createIsRequiredSubItem("Slate", spec.slate_required, spec.slate_details, true));
+}
+
+function video(sepc: Spec): void {
+    const formattingContainer = createSection("Video", ELEMENTS.video);
 }

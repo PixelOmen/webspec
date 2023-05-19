@@ -18,8 +18,8 @@
     margin-top: 10px;
     border: 2px solid black;
     border-radius: 2px;
-    overflow: auto;
     position: relative;
+    overflow: auto;
 }
 
 #table-controls {
@@ -148,6 +148,10 @@
     text-align: left;
 }
 
+.details-placeholder {
+    text-align: center;
+}
+
 .details-section-container {
     display: flex;
     flex-wrap: wrap;
@@ -160,6 +164,7 @@
     font-size: 10pt;
     margin-right: 30px;
     margin-bottom: 1.5rem;
+    max-width: 500px;
 }
 
 .details-subItem-container label {
@@ -169,7 +174,7 @@
     box-sizing: border-box;
 }
 
-.details-subItem-container p, a {
+.details-subItem-container p, .details-subItem-container a {
     display: block;
     padding: 10px;
     background-color: #01283c;
@@ -180,6 +185,7 @@
 .details-subItem-block {
     flex-basis: 100%;
     margin-right: 0px;
+    max-width: 100%;
 }
 
 .details-subItem-block label {
