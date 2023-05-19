@@ -191,7 +191,7 @@ function additional(spec: Spec): void {
                                                                 spec.artwork_details, true));
     sectionContainer.append(createIsRequiredSubItem("Reports/Forms", spec.reports_required,
                                                                     spec.reports_details, true));
-    sectionContainer.append(createTextSubItem("Notes", spec.notes, true, false, true));
+    sectionContainer.append(createTextSubItem("Notes", spec.notes, true));
 }
 
 
