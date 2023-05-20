@@ -51,6 +51,9 @@ function createTextSubItem(label: string, value: string, oneLine?: boolean,
     if (center || !value) {
         subItem.value.style.textAlign = "center";
     }
+    if (!value) {
+        subItem.container.classList.add('details-subItem-emptyValue');
+    }
     return subItem.container;
 }
 
@@ -58,6 +61,9 @@ function createBoolSubItem(label: string, value: boolean): HTMLDivElement {
     const subItem = createSubItem(label);
     subItem.value.innerText = value ? "Required" : "N/A";
     subItem.value.style.textAlign = "center";
+    if (!value) {
+        subItem.container.classList.add('details-subItem-emptyValue');
+    }
     return subItem.container;
 }
 
@@ -67,7 +73,8 @@ function createIsRequiredSubItem(label: string, required: boolean, details: stri
     if (required) { 
         subItem.value.innerText = details ? details : "Required";
     } else {
-        subItem.value.innerText = "N/A";       
+        subItem.value.innerText = "N/A";
+        subItem.container.classList.add('details-subItem-emptyValue');
     }
     if (forceOneLine && details) {
         subItem.container.classList.add('details-subItem-block');

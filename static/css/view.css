@@ -182,6 +182,10 @@
     border: 1px solid #01496c;
 }
 
+.details-subItem-emptyValue p {
+    background-color: #2a373d;
+}
+
 .details-subItem-block {
     flex-basis: 100%;
     margin-right: 0px;

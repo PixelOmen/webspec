@@ -41,12 +41,18 @@ function createTextSubItem(label, value, oneLine, center, emptyOneLine) {
     if (center || !value) {
         subItem.value.style.textAlign = "center";
     }
+    if (!value) {
+        subItem.container.classList.add('details-subItem-emptyValue');
+    }
     return subItem.container;
 }
 function createBoolSubItem(label, value) {
     const subItem = createSubItem(label);
     subItem.value.innerText = value ? "Required" : "N/A";
     subItem.value.style.textAlign = "center";
+    if (!value) {
+        subItem.container.classList.add('details-subItem-emptyValue');
+    }
     return subItem.container;
 }
 function createIsRequiredSubItem(label, required, details, forceOneLine, center) {
@@ -56,6 +62,7 @@ function createIsRequiredSubItem(label, required, details, forceOneLine, center)
     }
     else {
         subItem.value.innerText = "N/A";
+        subItem.container.classList.add('details-subItem-emptyValue');
     }
     if (forceOneLine && details) {
         subItem.container.classList.add('details-subItem-block');
