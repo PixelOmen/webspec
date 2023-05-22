@@ -1,13 +1,8 @@
 import * as detailedView from './libs/detailedview.js';
-export {};
+import * as notifications from './libs/notifications.js';
+export { ClientResponse, SpecResponse, fetchClients, fetchClientSpecs };
 
 const ELEMENTS = {
-    notificationBlur: document.getElementById('notification-blur') as HTMLDivElement,
-    notificationContainer: document.getElementById('notification-container-generic') as HTMLDivElement,
-    notificationMessage: document.getElementById('notification-message') as HTMLDivElement,
-    notificationBtnClose: document.getElementById('notification-btn-close') as HTMLButtonElement,
-    notificationDisconnect: document.getElementById('notification-container-disconnect') as HTMLDivElement,
-    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement,
     tableItemsContainer: document.getElementById('table-items-container') as HTMLDivElement,
     tableHeaders: document.getElementById('table-headers') as HTMLDivElement,
     clientSelect: document.getElementById('client-select-dropdown') as HTMLSelectElement
@@ -24,14 +19,15 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
+    let msg = "Connection lost. Please try refreshing the page.";
+    new notifications.NotificationMsg(() => {
+        window.location.reload();
+    }).displayNotification(msg);
 };
 STATE.CONNECTION.onerror = (e) => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
+    new notifications.NotificationMsg().displayNotification(e.toString());
 };
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
@@ -49,6 +45,7 @@ STATE.CONNECTION.onmessage = (msg) => {
 
 interface ClientResponse {
     type: string;
+    status: string;
     error: string;
     output: {
         "clients": string[];
@@ -57,6 +54,7 @@ interface ClientResponse {
 
 interface SpecResponse {
     type: string;
+    status: string;
     error: string;
     output: {
         "specs": detailedView.Spec[];
@@ -69,7 +67,7 @@ async function fetchClients(): Promise<ClientResponse> {
         .then((data) => { return data; });
 }
 
-function fetchSpecs(client: string): Promise<SpecResponse> {
+function fetchClientSpecs(client: string): Promise<SpecResponse> {
     var baseURL = '/query/specs/';
     var fullURL = baseURL + encodeURIComponent(`client=${client}`);
     return fetch(fullURL)
@@ -80,10 +78,13 @@ function fetchSpecs(client: string): Promise<SpecResponse> {
 function setClientDropdown(): void {
     ELEMENTS.clientSelect.innerHTML = "";
     ELEMENTS.clientSelect.addEventListener('change', async () => {
-        const clientSpecs = await fetchSpecs(ELEMENTS.clientSelect.value);
+        const clientSpecs = await fetchClientSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
     });
     fetchClients().then((res) => {
+        if ( res.status == "error") {
+            new notifications.NotificationMsg().displayNotification(res.error);
+        }
         for (const client of res.output.clients) {
             const option = document.createElement('option');
             option.value = client;
@@ -156,9 +157,6 @@ function setColumnWidths(): void {
 }
 
 function main() {
-    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
-        window.location.reload();
-    });
     setClientDropdown();
 }
 

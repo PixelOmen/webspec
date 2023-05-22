@@ -12,6 +12,7 @@
             font-style: normal;
         }
     </style>
+    <link rel="stylesheet" href='{{ url_for("static", filename="css/notification.css", v=APPVERSION) }}'>
     <link rel="stylesheet" href='{{ url_for("static", filename="css/base.css", v=APPVERSION) }}'>
     {% block head %} {% endblock %}
 </head>
@@ -23,19 +24,6 @@
             </a>
         </div>
         <img src="{{ url_for('static', filename='img/roundaboutlogo_alt.png')}}" alt="Roundabout Sign" id='roundaboutSign'>
-    </div>
-    <div class="hidden" id="notification-blur"></div>
-    <div class="notification-container hidden" id="notification-container-generic">
-        <div id="notification-message"></div>
-        <br>
-        <button class="notification-btn" id="notification-btn-close">Close</button>
-    </div>
-    <div class="notification-container hidden" id="notification-container-disconnect">
-        <div>
-            <p>Connection lost. Please try refreshing the page.</p>
-        </div>
-        <br>
-        <button class="notification-btn" id="notification-btn-reload">Refresh</button>
     </div>
     {% block body %} {% endblock %}
     {% block script %} {% endblock %}

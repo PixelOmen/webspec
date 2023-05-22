@@ -8,13 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as detailedView from './libs/detailedview.js';
+import * as notifications from './libs/notifications.js';
+export { fetchClients, fetchClientSpecs };
 const ELEMENTS = {
-    notificationBlur: document.getElementById('notification-blur'),
-    notificationContainer: document.getElementById('notification-container-generic'),
-    notificationMessage: document.getElementById('notification-message'),
-    notificationBtnClose: document.getElementById('notification-btn-close'),
-    notificationDisconnect: document.getElementById('notification-container-disconnect'),
-    notificationBtnReload: document.getElementById('notification-btn-reload'),
     tableItemsContainer: document.getElementById('table-items-container'),
     tableHeaders: document.getElementById('table-headers'),
     clientSelect: document.getElementById('client-select-dropdown')
@@ -30,14 +26,15 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.log("Connection closed");
+    let msg = "Connection lost. Please try refreshing the page.";
+    new notifications.NotificationMsg(() => {
+        window.location.reload();
+    }).displayNotification(msg);
 };
 STATE.CONNECTION.onerror = (e) => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
+    new notifications.NotificationMsg().displayNotification(e.toString());
 };
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
@@ -59,7 +56,7 @@ function fetchClients() {
             .then((data) => { return data; });
     });
 }
-function fetchSpecs(client) {
+function fetchClientSpecs(client) {
     var baseURL = '/query/specs/';
     var fullURL = baseURL + encodeURIComponent(`client=${client}`);
     return fetch(fullURL)
@@ -69,10 +66,13 @@ function fetchSpecs(client) {
 function setClientDropdown() {
     ELEMENTS.clientSelect.innerHTML = "";
     ELEMENTS.clientSelect.addEventListener('change', () => __awaiter(this, void 0, void 0, function* () {
-        const clientSpecs = yield fetchSpecs(ELEMENTS.clientSelect.value);
+        const clientSpecs = yield fetchClientSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
     }));
     fetchClients().then((res) => {
+        if (res.status == "error") {
+            new notifications.NotificationMsg().displayNotification(res.error);
+        }
         for (const client of res.output.clients) {
             const option = document.createElement('option');
             option.value = client;
@@ -140,9 +140,6 @@ function setColumnWidths() {
     });
 }
 function main() {
-    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
-        window.location.reload();
-    });
     setClientDropdown();
 }
 main();

@@ -1,3 +1,5 @@
+import * as view from './view.js';
+import * as notifications from './libs/notifications.js';
 export {};
 
 const ELEMENTS = {
@@ -8,12 +10,6 @@ const ELEMENTS = {
     uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
     uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
     uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
-    notificationBlur: document.getElementById('notification-blur') as HTMLDivElement,
-    notificationContainer: document.getElementById('notification-container-generic') as HTMLDivElement,
-    notificationMessage: document.getElementById('notification-message') as HTMLDivElement,
-    notificationBtnClose: document.getElementById('notification-btn-close') as HTMLButtonElement,
-    notificationDisconnect: document.getElementById('notification-container-disconnect') as HTMLDivElement,
-    notificationBtnReload: document.getElementById('notification-btn-reload') as HTMLButtonElement,
 };
 
 const STATE = {
@@ -27,14 +23,15 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
+    let msg = "Connection lost. Please try refreshing the page.";
+    new notifications.NotificationMsg(() => {
+        window.location.reload();
+    }).displayNotification(msg);
     console.log("Connection closed");
 };
 STATE.CONNECTION.onerror = (e) => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
+    new notifications.NotificationMsg().displayNotification(e.toString());
 };
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
@@ -50,10 +47,10 @@ STATE.CONNECTION.onmessage = (msg) => {
     }
 };
 
-function displayNotification(msg: string) {
-    ELEMENTS.notificationContainer.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
-    ELEMENTS.notificationMessage.innerHTML = `<p>${msg}</p>`;
+async function fetchClients(): Promise<view.ClientResponse> {
+    return fetch("/query/clients/all")
+    .then((res) => { return res.json(); })
+    .then((data) => { return data; });
 }
 
 function formToFormData(form: HTMLFormElement): FormData {
@@ -86,21 +83,9 @@ function sendForm(form: HTMLFormElement): Promise<any> {
     });
 }
 
-function setNotificationContainer() {
-    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
-        window.location.reload();
-    });
-    ELEMENTS.notificationBtnClose.addEventListener('click', () => {
-        ELEMENTS.notificationContainer.classList.add('hidden');
-        ELEMENTS.notificationBlur.classList.add('hidden');
-    });
-}
-
 
 async function setClientDropdown() {
-    const response = await fetch("/query/clients/all")
-        .then((res) => { return res.json(); })
-        .then((data) => { return data; });
+    const response = await fetchClients();
     if (response.status !== "ok") {
         console.error(response.error);
         return;
@@ -164,11 +149,12 @@ function setSubmitBtn() {
         const response = await sendForm(ELEMENTS.form);
         STATE.sendAllowed = true;
         if (response.status == "error") {
-            displayNotification(response.error);
+            new notifications.NotificationMsg().displayNotification(response.error);
             return;
         }
         if (response.status == "ok") {
-            displayNotification("New Spec successfully created.");
+            const msg = "New Spec successfully created.";
+            new notifications.NotificationMsg().displayNotification(msg);
             setClientDropdown();
             return;
         }
@@ -177,7 +163,6 @@ function setSubmitBtn() {
 
 
 function main() {
-    setNotificationContainer();
     setClientDropdown();
     setUploadBtn();
     setSubmitBtn();

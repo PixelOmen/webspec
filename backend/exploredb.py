@@ -1,15 +1,14 @@
-from zoneinfo import ZoneInfo
-
-from db import utils
 from db.schema import Spec, Client, TempSpec
 from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-Spec.__table__.drop(ENGINE, checkfirst=True)
-Spec.__table__.create(ENGINE, checkfirst=True)
-tempspecs = session.query(TempSpec).all()
-for spec in tempspecs:
-    session.add(Spec(**spec.columns()))
+todelete = session.query(Client).filter(Client.name == "Yet another").first()
+if todelete is None:
+    session.close()
+    exit()
+for spec in todelete.specs:
+    session.delete(spec)
+session.delete(todelete)
 session.commit()
 session.close()

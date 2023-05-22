@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import * as notifications from './libs/notifications.js';
 const ELEMENTS = {
     form: document.getElementById('form-main'),
     clientSelect: document.getElementById('select-client'),
@@ -15,12 +16,6 @@ const ELEMENTS = {
     uploadBtnVisual: document.getElementById('input-docUpload-visual'),
     uploadBtnActual: document.getElementById('input-docUpload-actual'),
     uploadFilename: document.getElementById('input-docUpload-filename'),
-    notificationBlur: document.getElementById('notification-blur'),
-    notificationContainer: document.getElementById('notification-container-generic'),
-    notificationMessage: document.getElementById('notification-message'),
-    notificationBtnClose: document.getElementById('notification-btn-close'),
-    notificationDisconnect: document.getElementById('notification-container-disconnect'),
-    notificationBtnReload: document.getElementById('notification-btn-reload'),
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -33,14 +28,15 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
+    let msg = "Connection lost. Please try refreshing the page.";
+    new notifications.NotificationMsg(() => {
+        window.location.reload();
+    }).displayNotification(msg);
     console.log("Connection closed");
 };
 STATE.CONNECTION.onerror = (e) => {
-    ELEMENTS.notificationDisconnect.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
     console.error(e);
+    new notifications.NotificationMsg().displayNotification(e.toString());
 };
 STATE.CONNECTION.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
@@ -55,10 +51,12 @@ STATE.CONNECTION.onmessage = (msg) => {
             console.error(`Unknown websocket message type: ${data.type}`);
     }
 };
-function displayNotification(msg) {
-    ELEMENTS.notificationContainer.classList.remove('hidden');
-    ELEMENTS.notificationBlur.classList.remove('hidden');
-    ELEMENTS.notificationMessage.innerHTML = `<p>${msg}</p>`;
+function fetchClients() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return fetch("/query/clients/all")
+            .then((res) => { return res.json(); })
+            .then((data) => { return data; });
+    });
 }
 function formToFormData(form) {
     const formData = new FormData(form);
@@ -88,20 +86,9 @@ function sendForm(form) {
         return data;
     });
 }
-function setNotificationContainer() {
-    ELEMENTS.notificationBtnReload.addEventListener('click', () => {
-        window.location.reload();
-    });
-    ELEMENTS.notificationBtnClose.addEventListener('click', () => {
-        ELEMENTS.notificationContainer.classList.add('hidden');
-        ELEMENTS.notificationBlur.classList.add('hidden');
-    });
-}
 function setClientDropdown() {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch("/query/clients/all")
-            .then((res) => { return res.json(); })
-            .then((data) => { return data; });
+        const response = yield fetchClients();
         if (response.status !== "ok") {
             console.error(response.error);
             return;
@@ -162,21 +149,20 @@ function setSubmitBtn() {
         const response = yield sendForm(ELEMENTS.form);
         STATE.sendAllowed = true;
         if (response.status == "error") {
-            displayNotification(response.error);
+            new notifications.NotificationMsg().displayNotification(response.error);
             return;
         }
         if (response.status == "ok") {
-            displayNotification("New Spec successfully created.");
+            const msg = "New Spec successfully created.";
+            new notifications.NotificationMsg().displayNotification(msg);
             setClientDropdown();
             return;
         }
     }));
 }
 function main() {
-    setNotificationContainer();
     setClientDropdown();
     setUploadBtn();
     setSubmitBtn();
 }
 main();
-export {};

@@ -102,6 +102,11 @@ class QueryHandler:
         specs = session.query(Spec).all()
         specs.sort(key=lambda spec: spec.name) # type: ignore
         return specs
+
+    def _single_spec(self, spec: str) -> Spec | None:
+        session = self._get_session()
+        spec = session.query(Spec).filter(Spec.name == spec).first()
+        return spec
     
     def _specs_by_client(self, client: str) -> list[Spec]:
         session = self._get_session()
@@ -119,17 +124,9 @@ class QueryHandler:
             return self.all_specs()
         elif self.query.lower().startswith("client="):
             return self.specs_by_client(self.query.split("=")[1])
+        elif self.query.lower().startswith("spec="):
+            return self.single_spec(self.query.split("=")[1])
         return BackEndResponse(type="query", status="error", error=f"Query not implemented: {self.query}")
-    
-    def run_query(self) -> BackEndResponse:
-        if self.table not in self.TABLES:
-            return BackEndResponse(type="query", status="error", error=f"Invalid table name: {self.table}")
-        if self.table == "clients":
-            return self._client_query()
-        elif self.table == "specs":
-            return self._spec_query()
-        else:
-            return BackEndResponse(type="query", status="error", error=f"Table not implemented in run_query: {self.table}")
 
     def all_clients(self) -> BackEndResponse:
         clients = self._all_clients()
@@ -141,7 +138,27 @@ class QueryHandler:
         self._close_session()
         return BackEndResponse(type="specquery", output={"specs": [spec.jsondict() for spec in specs]})
     
+    def single_spec(self, name: str) -> BackEndResponse:
+        spec = self._single_spec(name)
+        payload = [spec.jsondict()] if spec else []
+        self._close_session()
+        return BackEndResponse(type="specquery", output={"specs": payload})
+    
     def specs_by_client(self, client: str) -> BackEndResponse:
         specs = self._specs_by_client(client)
         self._close_session()
         return BackEndResponse(type="specquery", output={"specs": [spec.jsondict() for spec in specs]})
+    
+    def run_query(self) -> BackEndResponse:
+        if self.table not in self.TABLES:
+            return BackEndResponse(type="query", status="error", error=f"Invalid table name: {self.table}")
+        if self.table == "clients":
+            result = self._client_query()
+            self._close_session()
+            return result
+        elif self.table == "specs":
+            result = self._spec_query()
+            self._close_session()
+            return result
+        else:
+            return BackEndResponse(type="query", status="error", error=f"Table not implemented in run_query: {self.table}")
