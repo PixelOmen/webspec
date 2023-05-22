@@ -80,17 +80,26 @@ function base64ToBinary(b64str) {
     }
     return binaryData;
 }
-function base64ToURL(b64str, apptype) {
-    const apptypeStr = apptype ? apptype : 'application/pdf';
+function base64ToURL(b64str, extension) {
     const binaryData = base64ToBinary(b64str);
-    const url = URL.createObjectURL(new Blob([binaryData], { type: apptypeStr }));
+    const apptype = extension == "pdf" ? "application/pdf" : undefined;
+    if (apptype == "application/pdf") {
+        var url = URL.createObjectURL(new Blob([binaryData], { type: apptype }));
+    }
+    else {
+        var url = URL.createObjectURL(new Blob([binaryData]));
+    }
     return url;
 }
 function createFileSubItem(label, filename, base64str, oneline) {
-    if (!filename) {
+    var _a;
+    if (!filename)
         return createTextSubItem(label, "N/A", oneline);
+    const ext = (_a = filename.split('.').pop()) === null || _a === void 0 ? void 0 : _a.toLowerCase();
+    if (!ext) {
+        throw new Error(`Could not get extension from filename: ${filename}`);
     }
-    const fileURL = base64ToURL(base64str);
+    const fileURL = base64ToURL(base64str, ext);
     const subItemContainer = document.createElement('div');
     subItemContainer.classList.add('details-subItem-container');
     const labelElem = document.createElement('label');
@@ -99,7 +108,10 @@ function createFileSubItem(label, filename, base64str, oneline) {
     const fileAnchor = document.createElement('a');
     fileAnchor.href = fileURL;
     fileAnchor.innerText = filename;
-    if (navigator.userAgent.indexOf("Edg") < 0 && navigator.userAgent.indexOf("Chrome") < 0) {
+    if ((navigator.userAgent.indexOf("Edg") < 0 &&
+        navigator.userAgent.indexOf("Chrome") < 0 &&
+        navigator.userAgent.indexOf("Firefox") < 0) ||
+        ext != "pdf") {
         fileAnchor.download = filename;
     }
     else {
