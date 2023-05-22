@@ -108,7 +108,7 @@ function base64ToURL(b64str: string, extension: string): string {
 function createFileSubItem(label: string, filename: string, base64str: string,
     oneline?: boolean): HTMLDivElement {
 
-    if (!filename) return createTextSubItem(label, "N/A", oneline);
+    if (!filename) return createTextSubItem(label, "", oneline);
 
     const ext = filename.split('.').pop()?.toLowerCase();
     if (!ext) {

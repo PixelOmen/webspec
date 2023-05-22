@@ -94,7 +94,7 @@ function base64ToURL(b64str, extension) {
 function createFileSubItem(label, filename, base64str, oneline) {
     var _a;
     if (!filename)
-        return createTextSubItem(label, "N/A", oneline);
+        return createTextSubItem(label, "", oneline);
     const ext = (_a = filename.split('.').pop()) === null || _a === void 0 ? void 0 : _a.toLowerCase();
     if (!ext) {
         throw new Error(`Could not get extension from filename: ${filename}`);

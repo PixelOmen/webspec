@@ -106,6 +106,12 @@ function setClientDropdown() {
             console.error(response.error);
             return;
         }
+        if (ELEMENTS.clientSelect.value == "new") {
+            var currentClient = ELEMENTS.clientName.value;
+        }
+        else {
+            var currentClient = ELEMENTS.clientSelect.value;
+        }
         ELEMENTS.clientSelect.innerHTML = "";
         const defaultOption = document.createElement('option');
         defaultOption.value = "new";
@@ -130,6 +136,11 @@ function setClientDropdown() {
                 ELEMENTS.clientName.value = "";
             }
         });
+        if (currentClient != "" && currentClient != "new") {
+            ELEMENTS.clientSelect.value = currentClient;
+            ELEMENTS.clientNameContainer.classList.add('hidden');
+            ELEMENTS.clientName.value = currentClient;
+        }
     });
 }
 function setUploadBtn() {
