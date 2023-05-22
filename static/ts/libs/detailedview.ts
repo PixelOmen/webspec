@@ -1,4 +1,5 @@
-export { Spec, display };
+import * as fetchDB from "./fetchDB.js";
+export { display };
 
 const ELEMENTS: { [key: string]: HTMLDivElement } = {
     container: document.getElementById('details-full-container') as HTMLDivElement,
@@ -8,11 +9,6 @@ const ELEMENTS: { [key: string]: HTMLDivElement } = {
     audio: document.getElementById('details-audio') as HTMLDivElement,
     metadata: document.getElementById('details-metadata') as HTMLDivElement,
     additional: document.getElementById('details-additional') as HTMLDivElement
-}
-
-interface Spec {
-    [key: string]: any;
-    source: string; //Base64 encoded string
 }
 
 function createSection(name: string, parent: HTMLDivElement): HTMLDivElement {
@@ -139,7 +135,7 @@ function createFileSubItem(label: string, filename: string, base64str: string,
 }
 
 
-function general(spec: Spec): void {
+function general(spec: fetchDB.Spec): void {
     const sectionContainer = createSection("General", ELEMENTS.general);
     sectionContainer.append(createTextSubItem("Client", spec.client_name));
     sectionContainer.append(createTextSubItem("Spec", spec.name));
@@ -149,7 +145,7 @@ function general(spec: Spec): void {
     sectionContainer.append(createTextSubItem("Description", spec.description, true));
 }
 
-function formatting(spec: Spec): void {
+function formatting(spec: fetchDB.Spec): void {
     const sectionContainer = createSection("Formatting", ELEMENTS.formatting);
     sectionContainer.append(createTextSubItem("Start Timecode", spec.start_timecode, false, true));
     sectionContainer.append(createBoolSubItem("Dropframe", spec.dropframe));
@@ -167,7 +163,7 @@ function formatting(spec: Spec): void {
                                                                             spec.act_breaks_details, true));
 }
 
-function video(spec: Spec): void {
+function video(spec: fetchDB.Spec): void {
     const sectionContainer = createSection("Video", ELEMENTS.video);
     sectionContainer.append(createTextSubItem("Resolution", spec.resolution, false, true));
     sectionContainer.append(createTextSubItem("Aspect Ratio", spec.aspect_ratio, false, true));
@@ -179,7 +175,7 @@ function video(spec: Spec): void {
     sectionContainer.append(createTextSubItem("Colorspace", spec.colorspace, false, true));
 }
 
-function audio(spec: Spec): void {
+function audio(spec: fetchDB.Spec): void {
     const sectionContainer = createSection("Audio", ELEMENTS.audio);
     sectionContainer.append(createTextSubItem("Codec", spec.audio_codec, false, true));
     sectionContainer.append(createTextSubItem("Profile", spec.audio_codec_profile, false, true));
@@ -192,7 +188,7 @@ function audio(spec: Spec): void {
     sectionContainer.append(createTextSubItem("Audio Details", spec.audio_details));
 }
 
-function metadata(spec: Spec): void {
+function metadata(spec: fetchDB.Spec): void {
     const sectionContainer = createSection("Metadata", ELEMENTS.metadata);
     sectionContainer.append(createBoolSubItem("QT Audio Flags", spec.audio_flags));
     sectionContainer.append(createBoolSubItem("V-chip", spec.vchip));
@@ -203,7 +199,7 @@ function metadata(spec: Spec): void {
                                                                     spec.streaming_flags_details, true));
 }
 
-function additional(spec: Spec): void {
+function additional(spec: fetchDB.Spec): void {
     const sectionContainer = createSection("Additional", ELEMENTS.additional);
     sectionContainer.append(createIsRequiredSubItem("Artwork", spec.artwork_required,
                                                                 spec.artwork_details, true));
@@ -220,7 +216,7 @@ function clear(): void {
     }
 }
 
-function display(spec: Spec): void {
+function display(spec: fetchDB.Spec): void {
     clear();
     general(spec);
     formatting(spec);

@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import * as fetchDB from "./libs/fetchDB.js";
 import * as notifications from './libs/notifications.js';
 const ELEMENTS = {
     form: document.getElementById('form-main'),
@@ -51,13 +52,6 @@ STATE.CONNECTION.onmessage = (msg) => {
             console.error(`Unknown websocket message type: ${data.type}`);
     }
 };
-function fetchClients() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return fetch("/query/clients/all")
-            .then((res) => { return res.json(); })
-            .then((data) => { return data; });
-    });
-}
 function formToFormData(form) {
     const formData = new FormData(form);
     const jsonobj = { "sessionID": STATE.sessionID };
@@ -76,19 +70,21 @@ function formToFormData(form) {
     return formData;
 }
 function sendForm(form) {
-    const formData = formToFormData(form);
-    return fetch('/upload', {
-        method: 'POST',
-        body: formData,
-    }).then((res) => {
-        return res.json();
-    }).then((data) => {
-        return data;
+    return __awaiter(this, void 0, void 0, function* () {
+        const formData = formToFormData(form);
+        return fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        }).then((res) => {
+            return res.json();
+        }).then((data) => {
+            return data;
+        });
     });
 }
 function setClientDropdown() {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetchClients();
+        const response = yield fetchDB.fetchClients();
         if (response.status !== "ok") {
             console.error(response.error);
             return;
@@ -160,9 +156,17 @@ function setSubmitBtn() {
         }
     }));
 }
+function loadSpec() {
+    const currentUrl = new URLSearchParams(window.location.search);
+    const specName = currentUrl.get('spec');
+    if (!specName)
+        return;
+    console.log(specName);
+}
 function main() {
     setClientDropdown();
     setUploadBtn();
     setSubmitBtn();
+    loadSpec();
 }
 main();

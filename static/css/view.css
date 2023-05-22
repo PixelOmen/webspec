@@ -143,6 +143,13 @@
     padding: 20px;
 }
 
+#btn-edit {
+    margin-left: auto;
+    max-width: 150px;
+    height: 30px;
+    padding: 0;
+}
+
 #details-full-container h2 {
     margin-bottom: 0px;
     text-align: left;

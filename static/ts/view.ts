@@ -1,11 +1,13 @@
+import * as fetchDB from "./libs/fetchDB.js";
 import * as detailedView from './libs/detailedview.js';
 import * as notifications from './libs/notifications.js';
-export { ClientResponse, SpecResponse, fetchClients, fetchClientSpecs };
+export {};
 
 const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container') as HTMLDivElement,
     tableHeaders: document.getElementById('table-headers') as HTMLDivElement,
-    clientSelect: document.getElementById('client-select-dropdown') as HTMLSelectElement
+    clientSelect: document.getElementById('client-select-dropdown') as HTMLSelectElement,
+    editBtn: document.getElementById('btn-edit') as HTMLButtonElement,
 };
 
 const STATE = {
@@ -43,45 +45,13 @@ STATE.CONNECTION.onmessage = (msg) => {
     }
 };
 
-interface ClientResponse {
-    type: string;
-    status: string;
-    error: string;
-    output: {
-        "clients": string[];
-    }
-}
-
-interface SpecResponse {
-    type: string;
-    status: string;
-    error: string;
-    output: {
-        "specs": detailedView.Spec[];
-    }
-}
-
-async function fetchClients(): Promise<ClientResponse> {
-    return fetch('/query/clients/all')
-        .then((res) => res.json())
-        .then((data) => { return data; });
-}
-
-function fetchClientSpecs(client: string): Promise<SpecResponse> {
-    var baseURL = '/query/specs/';
-    var fullURL = baseURL + encodeURIComponent(`client=${client}`);
-    return fetch(fullURL)
-        .then((res) => res.json())
-        .then((data) => { return data; });
-}
-
 function setClientDropdown(): void {
     ELEMENTS.clientSelect.innerHTML = "";
     ELEMENTS.clientSelect.addEventListener('change', async () => {
-        const clientSpecs = await fetchClientSpecs(ELEMENTS.clientSelect.value);
+        const clientSpecs = await fetchDB.fetchClientSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
     });
-    fetchClients().then((res) => {
+    fetchDB.fetchClients().then((res) => {
         if ( res.status == "error") {
             new notifications.NotificationMsg().displayNotification(res.error);
         }
@@ -105,7 +75,7 @@ function createTableColumn(client: string, row: number, column: number,
     container.appendChild(columnDiv);
 }
 
-function setTableItems(specs: detailedView.Spec[]): void {
+function setTableItems(specs: fetchDB.Spec[]): void {
     ELEMENTS.tableItemsContainer.innerHTML = "";
     let row = 1;
     for (const spec of specs) {
@@ -122,6 +92,18 @@ function setTableItems(specs: detailedView.Spec[]): void {
         createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
         item.addEventListener('click', () => {
+            const oldBtn = ELEMENTS.editBtn;
+            if (!oldBtn.parentNode) {
+                throw new Error("Old button has no parent node");
+            }
+            const newBtn = oldBtn.cloneNode(true) as HTMLButtonElement;
+            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+            ELEMENTS.editBtn = newBtn;
+            ELEMENTS.editBtn.addEventListener('click', () => {
+                const specName = encodeURIComponent(spec.name);
+                window.location.href = `/nav/entry?spec=${specName}`;
+            });
+            ELEMENTS.editBtn.classList.remove('hidden');
             detailedView.display(spec);
         });
         row++;

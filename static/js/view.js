@@ -7,13 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import * as fetchDB from "./libs/fetchDB.js";
 import * as detailedView from './libs/detailedview.js';
 import * as notifications from './libs/notifications.js';
-export { fetchClients, fetchClientSpecs };
 const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container'),
     tableHeaders: document.getElementById('table-headers'),
-    clientSelect: document.getElementById('client-select-dropdown')
+    clientSelect: document.getElementById('client-select-dropdown'),
+    editBtn: document.getElementById('btn-edit'),
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -49,27 +50,13 @@ STATE.CONNECTION.onmessage = (msg) => {
             console.error(`Unknown websocket message type: ${data.type}`);
     }
 };
-function fetchClients() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return fetch('/query/clients/all')
-            .then((res) => res.json())
-            .then((data) => { return data; });
-    });
-}
-function fetchClientSpecs(client) {
-    var baseURL = '/query/specs/';
-    var fullURL = baseURL + encodeURIComponent(`client=${client}`);
-    return fetch(fullURL)
-        .then((res) => res.json())
-        .then((data) => { return data; });
-}
 function setClientDropdown() {
     ELEMENTS.clientSelect.innerHTML = "";
     ELEMENTS.clientSelect.addEventListener('change', () => __awaiter(this, void 0, void 0, function* () {
-        const clientSpecs = yield fetchClientSpecs(ELEMENTS.clientSelect.value);
+        const clientSpecs = yield fetchDB.fetchClientSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
     }));
-    fetchClients().then((res) => {
+    fetchDB.fetchClients().then((res) => {
         if (res.status == "error") {
             new notifications.NotificationMsg().displayNotification(res.error);
         }
@@ -107,6 +94,18 @@ function setTableItems(specs) {
         createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
         item.addEventListener('click', () => {
+            const oldBtn = ELEMENTS.editBtn;
+            if (!oldBtn.parentNode) {
+                throw new Error("Old button has no parent node");
+            }
+            const newBtn = oldBtn.cloneNode(true);
+            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+            ELEMENTS.editBtn = newBtn;
+            ELEMENTS.editBtn.addEventListener('click', () => {
+                const specName = encodeURIComponent(spec.name);
+                window.location.href = `/nav/entry?spec=${specName}`;
+            });
+            ELEMENTS.editBtn.classList.remove('hidden');
             detailedView.display(spec);
         });
         row++;

@@ -1,4 +1,4 @@
-import * as view from './view.js';
+import * as fetchDB from "./libs/fetchDB.js";
 import * as notifications from './libs/notifications.js';
 export {};
 
@@ -47,11 +47,7 @@ STATE.CONNECTION.onmessage = (msg) => {
     }
 };
 
-async function fetchClients(): Promise<view.ClientResponse> {
-    return fetch("/query/clients/all")
-    .then((res) => { return res.json(); })
-    .then((data) => { return data; });
-}
+
 
 function formToFormData(form: HTMLFormElement): FormData {
     const formData = new FormData(form);
@@ -71,7 +67,7 @@ function formToFormData(form: HTMLFormElement): FormData {
     return formData;
 }
 
-function sendForm(form: HTMLFormElement): Promise<any> {
+async function sendForm(form: HTMLFormElement): Promise<any> {
     const formData = formToFormData(form);
     return fetch('/upload', {
         method: 'POST',
@@ -85,7 +81,7 @@ function sendForm(form: HTMLFormElement): Promise<any> {
 
 
 async function setClientDropdown() {
-    const response = await fetchClients();
+    const response = await fetchDB.fetchClients();
     if (response.status !== "ok") {
         console.error(response.error);
         return;
@@ -161,11 +157,19 @@ function setSubmitBtn() {
     });
 }
 
+function loadSpec(): void {
+    const currentUrl = new URLSearchParams(window.location.search);
+    const specName = currentUrl.get('spec');
+    if (!specName) return;
+    console.log(specName);
+}
+
 
 function main() {
     setClientDropdown();
     setUploadBtn();
     setSubmitBtn();
+    loadSpec();
 }
 
 main();
