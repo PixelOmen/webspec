@@ -1,4 +1,4 @@
-export { display };
+export { display, base64ToBinary };
 const ELEMENTS = {
     container: document.getElementById('details-full-container'),
     general: document.getElementById('details-general'),

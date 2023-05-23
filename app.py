@@ -82,14 +82,15 @@ def index():
 def nav(page: str):
     return render_template(f'_{page}.html', APPVERSION=APPVERSION)
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/upload/<string:uploadtype>', methods=['POST'])
+def upload(uploadtype: str):
     data = request.form['jsonData']
     files = request.files
     jsondata: dict[str, Any] = json.loads(data)
     ws = websocket_from_sessionid(jsondata['sessionID'])
     ws.send(json.dumps({"type": "debug", "msg": "Websocket connection through sessionID successfull (upload)"}))
-    handler = UploadHandler(jsondata, files)
+    edit = True if uploadtype.lower() == "edit" else False
+    handler = UploadHandler(jsondata, files, edit)
     handler.send()
     return handler.status().json()
 

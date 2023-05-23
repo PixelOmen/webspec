@@ -9,9 +9,10 @@ if TYPE_CHECKING:
     from .db import Session
 
 class UploadHandler:
-    def __init__(self, jsondata: dict[str, Any], files: "ImmutableMultiDict[str,'FileStorage']") -> None:
+    def __init__(self, jsondata: dict[str, Any], files: "ImmutableMultiDict[str,'FileStorage']", editsession: bool=False) -> None:
         self.jsondata = jsondata
         self.files = files
+        self.editsession = editsession
         self._status = "inprogress"
         self._error = ""
 
@@ -51,17 +52,26 @@ class UploadHandler:
     def send(self) -> None:
         session = SESSIONFACTORY()
         self._handle_source()
-        self._handle_spec_name(session)
-        if self._status == "error":
-            session.close()
-            return
         self._handle_client(session)
         if self._status == "error":
             session.close()
             return
         try:
-            spec = Spec(**self.jsondata)
-            session.add(spec)
+            if self.editsession:
+                spec = session.query(Spec).filter(Spec.name == self.jsondata["name"]).first()
+                if not spec:
+                    self._set_error("Spec name not found.")
+                    session.close()
+                    return
+                for key, value in self.jsondata.items():
+                    setattr(spec, key, value)
+            else:
+                self._handle_spec_name(session)
+                if self._status == "error":
+                    session.close()
+                    return
+                spec = Spec(**self.jsondata)
+                session.add(spec)
             session.commit()
         except Exception as e:
             session.rollback()

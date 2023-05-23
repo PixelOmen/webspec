@@ -109,6 +109,13 @@ textarea, select {
     border-radius: 10px;
     box-sizing: border-box;
     background-color: whitesmoke;
+    font-size: 10pt;
+    min-height: 80px;
+    overflow: auto;
+}
+
+select {
+    min-height: auto;
 }
 
 input {

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as fetchDB from "./libs/fetchDB.js";
+import * as loading from './libs/loading.js';
 import * as notifications from './libs/notifications.js';
 const ELEMENTS = {
     form: document.getElementById('form-main'),
@@ -23,7 +24,8 @@ const STATE = {
     sessionID: "",
     sendAllowed: true,
     username: "",
-    password: ""
+    password: "",
+    isEditSession: false
 };
 STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
@@ -72,7 +74,8 @@ function formToFormData(form) {
 function sendForm(form) {
     return __awaiter(this, void 0, void 0, function* () {
         const formData = formToFormData(form);
-        return fetch('/upload', {
+        const uploadType = STATE.isEditSession ? "edit" : "new";
+        return fetch(`/upload/${uploadType}`, {
             method: 'POST',
             body: formData,
         }).then((res) => {
@@ -149,24 +152,24 @@ function setSubmitBtn() {
             return;
         }
         if (response.status == "ok") {
-            const msg = "New Spec successfully created.";
+            if (STATE.isEditSession) {
+                var msg = "Spec successfully updated.";
+            }
+            else {
+                var msg = "New Spec successfully created.";
+            }
             new notifications.NotificationMsg().displayNotification(msg);
             setClientDropdown();
             return;
         }
     }));
 }
-function loadSpec() {
-    const currentUrl = new URLSearchParams(window.location.search);
-    const specName = currentUrl.get('spec');
-    if (!specName)
-        return;
-    console.log(specName);
-}
 function main() {
-    setClientDropdown();
-    setUploadBtn();
-    setSubmitBtn();
-    loadSpec();
+    return __awaiter(this, void 0, void 0, function* () {
+        yield setClientDropdown();
+        setUploadBtn();
+        setSubmitBtn();
+        STATE.isEditSession = yield loading.loadSpec(ELEMENTS.form, ELEMENTS.clientSelect);
+    });
 }
 main();

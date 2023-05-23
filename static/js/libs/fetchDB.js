@@ -21,3 +21,10 @@ export function fetchClientSpecs(client) {
         .then((res) => res.json())
         .then((data) => { return data; });
 }
+export function fetchSpec(specID) {
+    var baseURL = '/query/specs/';
+    var fullURL = baseURL + encodeURIComponent(`spec=${specID}`);
+    return fetch(fullURL)
+        .then((res) => res.json())
+        .then((data) => { return data; });
+}

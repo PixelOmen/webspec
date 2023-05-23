@@ -1,5 +1,5 @@
 import * as fetchDB from "./fetchDB.js";
-export { display };
+export { display, base64ToBinary };
 
 const ELEMENTS: { [key: string]: HTMLDivElement } = {
     container: document.getElementById('details-full-container') as HTMLDivElement,

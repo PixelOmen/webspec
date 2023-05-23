@@ -1,4 +1,5 @@
 import * as fetchDB from "./libs/fetchDB.js";
+import * as loading from './libs/loading.js';
 import * as notifications from './libs/notifications.js';
 export {};
 
@@ -17,7 +18,8 @@ const STATE = {
     sessionID: "",
     sendAllowed: true,
     username: "",
-    password: ""
+    password: "",
+    isEditSession: false
 };
 STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
@@ -69,7 +71,8 @@ function formToFormData(form: HTMLFormElement): FormData {
 
 async function sendForm(form: HTMLFormElement): Promise<any> {
     const formData = formToFormData(form);
-    return fetch('/upload', {
+    const uploadType = STATE.isEditSession ? "edit" : "new";
+    return fetch(`/upload/${uploadType}`, {
         method: 'POST',
         body: formData,
     }).then((res) => {
@@ -149,7 +152,11 @@ function setSubmitBtn() {
             return;
         }
         if (response.status == "ok") {
-            const msg = "New Spec successfully created.";
+            if (STATE.isEditSession) {
+                var msg = "Spec successfully updated."
+            } else {
+                var msg = "New Spec successfully created.";
+            }
             new notifications.NotificationMsg().displayNotification(msg);
             setClientDropdown();
             return;
@@ -157,19 +164,12 @@ function setSubmitBtn() {
     });
 }
 
-function loadSpec(): void {
-    const currentUrl = new URLSearchParams(window.location.search);
-    const specName = currentUrl.get('spec');
-    if (!specName) return;
-    console.log(specName);
-}
 
-
-function main() {
-    setClientDropdown();
+async function main() {
+    await setClientDropdown();
     setUploadBtn();
     setSubmitBtn();
-    loadSpec();
+    STATE.isEditSession = await loading.loadSpec(ELEMENTS.form, ELEMENTS.clientSelect);
 }
 
 main();

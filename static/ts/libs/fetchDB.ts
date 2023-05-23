@@ -35,3 +35,11 @@ export function fetchClientSpecs(client: string): Promise<SpecResponse> {
         .then((res) => res.json())
         .then((data) => { return data; });
 }
+
+export function fetchSpec(specID: string): Promise<SpecResponse> {
+    var baseURL = '/query/specs/';
+    var fullURL = baseURL + encodeURIComponent(`spec=${specID}`);
+    return fetch(fullURL)
+        .then((res) => res.json())
+        .then((data) => { return data; });
+}
