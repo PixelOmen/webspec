@@ -24,6 +24,14 @@
             </a>
         </div>
         <img src="{{ url_for('static', filename='img/roundaboutlogo_alt.png')}}" alt="Roundabout Sign" id='roundaboutSign'>
+        <div id="nav-btn-container">
+            <a href="/nav/entry">
+                <button class="btn-nav">New</button>
+            </a>
+            <a href="/nav/view">
+                <button class="btn-nav">Browse</button>
+            </a>
+        </div>
     </div>
     {% block body %} {% endblock %}
     {% block script %} {% endblock %}
