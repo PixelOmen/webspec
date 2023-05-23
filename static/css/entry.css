@@ -17,6 +17,11 @@ input:focus, textarea:focus, select:focus {
     outline: none;
 }
 
+select:focus {
+    border-color: rgb(0, 0, 0);
+    outline: none;
+}
+
 .form-container {
     background-color: #001d2b;
     margin-top: 1rem;

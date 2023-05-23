@@ -19,7 +19,7 @@ function setSource(spec: fetchDB.Spec): void {
     if (!source) return;
     const msg = "** Warning **<br><br> Due to browser security restrictions, " +
                 "the original source document must be uploaded again in order to retain the document " +
-                "while editing this spec. <br><br>" + 
+                "after editing. <br><br>" + 
                 "Please download the document via the 'Browse' page before editing this spec.";
     new notifications.NotificationMsg().displayNotification(msg);
 }

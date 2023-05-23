@@ -140,6 +140,7 @@ function setColumnWidths(): void {
 
 function main() {
     setClientDropdown();
+    window.addEventListener('resize', setColumnWidths);
 }
 
 main();

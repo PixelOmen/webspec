@@ -12,7 +12,7 @@
 /* Track */
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
-    border-radius: 10px;
+    /* border-radius: 10px; */
 }
 
 /* Handle */
@@ -33,7 +33,7 @@
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    min-width: 99%;
+    width: auto;
     height: 4em;
     background-color: rgb(16, 176, 174);
     background: linear-gradient(to right, rgb(1, 5, 5) 0px, rgb(16, 176, 174) 180px);
