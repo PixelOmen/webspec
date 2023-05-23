@@ -18,16 +18,13 @@ function setSource(spec: fetchDB.Spec): void {
     const source = spec.source;
     if (!source) return;
     const msg = "** Warning **<br><br> Due to browser security restrictions, " +
-                "the original source document must be uploaded again in order to edit this spec " +
-                "and also retain the document. <br><br>" + 
-                "Note that the current document is always available to download via the 'Browse' page.";
+                "the original source document must be uploaded again in order to retain the document " +
+                "while editing this spec. <br><br>" + 
+                "Please download the document via the 'Browse' page before editing this spec.";
     new notifications.NotificationMsg().displayNotification(msg);
 }
 
-export async function loadSpec(form: HTMLFormElement, clientSelect: HTMLSelectElement): Promise<boolean> {
-    const currentUrl = new URLSearchParams(window.location.search);
-    const specName = currentUrl.get('spec');
-    if (!specName) return false;
+export async function loadSpec(specName: string, form: HTMLFormElement, clientSelect: HTMLSelectElement): Promise<void> {
     const spec = await fetchDB.fetchSpec(specName);
     if (spec.status != "ok") {
         throw new Error(spec.error);
@@ -49,7 +46,7 @@ export async function loadSpec(form: HTMLFormElement, clientSelect: HTMLSelectEl
             case formElem instanceof HTMLSelectElement:
                 const selectElem = formElem as HTMLSelectElement;
                 if (selectElem.name != "Client") {
-                    throw new Error("Only Client dropdown has been implemented on Spec load")
+                    throw new Error(`Only Client dropdown has been implemented on Spec load: ${selectElem.name}`)
                 }
                 clientSelect.value = spec.output.specs[0]["client_name"];
                 clientSelect.dispatchEvent(new Event('change'));
@@ -65,5 +62,4 @@ export async function loadSpec(form: HTMLFormElement, clientSelect: HTMLSelectEl
                 console.error("Unknown form element on Spec load: ", formElem);
         }
     }
-    return true;
 }

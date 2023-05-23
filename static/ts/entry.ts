@@ -118,6 +118,7 @@ async function setClientDropdown() {
         } else {
             ELEMENTS.clientNameContainer.classList.remove('hidden');
             ELEMENTS.clientName.value = "";
+            ELEMENTS.clientName.focus();
         }
     });
 
@@ -164,12 +165,20 @@ function setSubmitBtn() {
     });
 }
 
+async function loadEditSpec(): Promise<boolean> {
+    const currentUrl = new URLSearchParams(window.location.search);
+    const specName = currentUrl.get('spec');
+    if (!specName) return false;
+    await loading.loadSpec(specName, ELEMENTS.form, ELEMENTS.clientSelect);
+    return true;
+}
+
 
 async function main() {
     await setClientDropdown();
     setUploadBtn();
     setSubmitBtn();
-    STATE.isEditSession = await loading.loadSpec(ELEMENTS.form, ELEMENTS.clientSelect);
+    STATE.isEditSession = await loadEditSpec();
 }
 
 main();

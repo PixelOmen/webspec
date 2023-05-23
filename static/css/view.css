@@ -45,12 +45,6 @@
     outline: none;
 }
 
-#client-select-container label {
-    color: whitesmoke;
-    padding-left: 10px;
-    font-size: 9pt;
-}
-
 #table-headers {
     padding: 0px 10px;
     display: flex;

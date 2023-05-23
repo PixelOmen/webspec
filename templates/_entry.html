@@ -11,16 +11,16 @@
             <div class="input-dropdown">
                 <label for="client_name">Client</label>
                 <select name="Client" id="select-client" placeholder="test"></select>
-                <div id="input-clientName-container">
+                <div class="input-simple" id="input-clientName-container">
                     <label for="client_name">New Client Name</label>
-                    <input type="text" name="client_name" id="input-clientName" style="width: 100%;">
+                    <input type="text" name="client_name" id="input-clientName">
                 </div>
             </div>
             <div class="input-simple section-start">
                 <label for="name">Spec Name</label>
                 <input type="text" name="name" style="width: 100%;">
             </div>
-            <div class="textarea-container section-start">
+            <div class="single-container full-single-container section-start">
                 <label for="description">Spec Description</label>
                 <textarea name="description" id="textarea-description" rows="3"></textarea>
             </div>
@@ -35,7 +35,7 @@
 
             <hr class="section-start">
 
-            <div class="checkboxes">
+            <div class="checkbox-row-container">
                 <div class="checkbox-container">
                     <label for="audio_flags">Audio Flags</label>
                     <input type="checkbox" name="audio_flags" id="checkbox-audio_flags" checked>
@@ -174,56 +174,57 @@
 
             <hr class="section-start">
 
-            <div class="input-simple section-start">
-                <label for="start_timecode">Starting Timecode</label>
-                <br>
-                <input type="text" name="start_timecode" style="width: 150px;">
-            </div>
-
-            <div class="input-simple section-start">
-                <label for="naming_convention">Naming Convention</label>
-                <textarea name="naming_convention" id="textarea-naming_convention" rows="3"></textarea>
-            </div>
-
-            <div class="textarea-container section-start">
-                <label for="headtailbuild">Head/Tail</label>
-                <textarea name="headtailbuild" id="textarea-headtailbuild" rows="3"></textarea>
-            </div>
-
-            <div class="textarea-container section-start">
-                <label for="audio_config">Audio Configuration</label>
-                <textarea name="audio_config" id="textarea-audio_config" rows="3"></textarea>
-            </div>
-            <div class="textarea-container">
-                <label for="audio_details">Audio Details</label>
-                <textarea name="audio_details" id="textarea-audio_details" rows="3"></textarea>
+            <div class="section-container">
+                <div class="input-simple section-start">
+                    <label for="start_timecode">Starting Timecode</label>
+                    <input type="text" name="start_timecode" style="width: 120px;">
+                </div>
+    
+                <div class="single-container full-single-container section-start">
+                    <label for="naming_convention">Naming Convention</label>
+                    <textarea name="naming_convention" id="textarea-naming_convention" rows="3"></textarea>
+                </div>
+    
+                <div class="single-container full-single-container section-start">
+                    <label for="headtailbuild">Head/Tail</label>
+                    <textarea name="headtailbuild" id="textarea-headtailbuild" rows="3"></textarea>
+                </div>
+    
+                <div class="single-container full-single-container section-start">
+                    <label for="audio_config">Audio Configuration</label>
+                    <textarea name="audio_config" id="textarea-audio_config" rows="3"></textarea>
+                </div>
+                <div class="single-container full-single-container">
+                    <label for="audio_details">Audio Details</label>
+                    <textarea name="audio_details" id="textarea-audio_details" rows="3"></textarea>
+                </div>
             </div>
 
             <hr class="section-start">
 
-            <div class="singles-container section-start">
-                <div class="input-single">
+            <div class="section-container section-start">
+                <div class="single-container">
                     <label for="colorspace">Colorspace</label>
                     <div class="textarea-container">
                         <textarea name="colorspace" id="input-single-colorspace" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="resolution">Resolution</label>
                     <div class="textarea-container">
                         <textarea name="resolution" id="input-single-resolution" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="aspect_ratio">Aspect Ratio</label>
                     <div class="textarea-container">
                         <textarea name="aspect_ratio" id="input-single-aspect_ratio" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="framerate">Framerate</label>
                     <div class="textarea-container">
                         <textarea name="framerate" id="input-single-framerate" rows="2"></textarea>
@@ -233,29 +234,29 @@
 
             <hr class="section-start">
 
-            <div class="singles-container section-start">
-                <div class="input-single">
+            <div class="section-container section-start">
+                <div class="single-container">
                     <label for="video_codec">Video Codec</label>
                     <div class="textarea-container">
                         <textarea name="video_codec" id="input-single-video_codec" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="video_codec_profile">Video Codec Profile</label>
                     <div class="textarea-container">
                         <textarea name="video_codec_profile" id="input-single-video_codec_profile" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="video_bitrate">Video Bitrate</label>
                     <div class="textarea-container">
                         <textarea name="video_bitrate" id="input-single-video_bitrate" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="video_bitdepth">Video Bitdepth</label>
                     <div class="textarea-container">
                         <textarea name="video_bitdepth" id="input-single-video_bitdepth" rows="2"></textarea>
@@ -265,29 +266,29 @@
 
             <hr class="section-start">
 
-            <div class="singles-container section-start">
-                <div class="input-single">
+            <div class="section-container section-start">
+                <div class="single-container">
                     <label for="audio_codec">Audio Codec</label>
                     <div class="textarea-container">
                         <textarea name="audio_codec" id="input-single-audio_codec" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="audio_codec_profile">Audio Codec Profile</label>
                     <div class="textarea-container">
                         <textarea name="audio_codec_profile" id="input-single-audio_codec_profile" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="audio_bitrate">Audio Bitrate</label>
                     <div class="textarea-container">
                         <textarea name="audio_bitrate" id="input-single-audio_bitrate" rows="2"></textarea>
                     </div>
                 </div>
 
-                <div class="input-single">
+                <div class="single-container">
                     <label for="audio_bitdepth">Audio Bitdepth</label>
                     <div class="textarea-container">
                         <textarea name="audio_bitdepth" id="input-single-audio_bitdepth" rows="2"></textarea>
@@ -297,9 +298,13 @@
 
             <hr class="section-start">
 
-            <div class="textarea-container section-start">
-                <label for="notes">Notes</label>
-                <textarea name="notes" id="textarea-notes" rows="3"></textarea>
+            <div class="section-container">
+                <div class="single-container full-single-container section-start">
+                    <label for="notes">Notes</label>
+                    <div class="textarea-container">
+                        <textarea name="notes" id="textarea-notes" rows="3"></textarea>
+                    </div>
+                </div>
             </div>
 
             <button type="submit" id="btn-submit">Save</button>

@@ -1,5 +1,24 @@
+label {
+    display: block;
+}
+
+input, textarea {
+    color: whitesmoke;
+    background-color: #01283c;
+    border: 2px solid black;
+    max-width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: rgb(1, 60, 156);
+    outline: none;
+}
+
 .form-container {
-    background-color: rgb(68,70,84);
+    background-color: #001d2b;
     margin-top: 1rem;
     margin-left: auto;
     margin-right: auto;
@@ -10,18 +29,10 @@
     border-radius: 10px;
 }
 
-.section-start {
-    margin-top: 2rem;
-}
-
-.input-simple input {
-    font-size: 14pt;
-    padding: 10px 10px;
-    box-sizing: border-box;
-}
-
 .input-dropdown select {
-    background-color: aliceblue;
+    /* background-color: rgb(212, 220, 228); */
+    background-color: #013b58;
+    color: whitesmoke;
     border-radius: 4px;
     font-size: 14pt;
     padding: 0;
@@ -30,26 +41,46 @@
     height: 40px;
 }
 
-.input-dropdown input {
-    font-size: 14pt;
-    padding: 5px 10px;
-    box-sizing: border-box;
+.section-start {
+    margin-top: 30px;
 }
 
-.checkboxes {
+.section-container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 100%;
 }
 
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
+.single-container {
+    margin-top: 20px;
+    max-width: 100%;
 }
 
-.checkbox-container label {
-    margin-right: 5px;
+.full-single-container {
+    flex-basis: 100%;
+}
+
+.full-single-container textarea {
+    width: 100%;
+    min-width: 100%;
+}
+
+.textarea-container textarea {
+    min-width: 380px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.input-simple {
+    width: 100%;
+}
+
+.input-simple input {
+    font-size: 12pt;
+    padding: 0px 10px;
+    background-color: #01283c;
+    height: 40px;
 }
 
 .details-container {
@@ -58,14 +89,25 @@
     justify-content: space-between;
 }
 
-.required-details-details {
-    min-width: 250px;
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
 }
 
-.singles-container {
+.checkbox-row-container {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.checkbox-container label {
+    margin-right: 5px;
+}
+
+.required-details-container {
+    max-width: 100%;
 }
 
 #btn-submit {

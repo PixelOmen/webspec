@@ -120,6 +120,7 @@ function setClientDropdown() {
             else {
                 ELEMENTS.clientNameContainer.classList.remove('hidden');
                 ELEMENTS.clientName.value = "";
+                ELEMENTS.clientName.focus();
             }
         });
         if (currentClient != "" && currentClient != "new") {
@@ -164,12 +165,22 @@ function setSubmitBtn() {
         }
     }));
 }
+function loadEditSpec() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentUrl = new URLSearchParams(window.location.search);
+        const specName = currentUrl.get('spec');
+        if (!specName)
+            return false;
+        yield loading.loadSpec(specName, ELEMENTS.form, ELEMENTS.clientSelect);
+        return true;
+    });
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield setClientDropdown();
         setUploadBtn();
         setSubmitBtn();
-        STATE.isEditSession = yield loading.loadSpec(ELEMENTS.form, ELEMENTS.clientSelect);
+        STATE.isEditSession = yield loadEditSpec();
     });
 }
 main();
