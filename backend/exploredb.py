@@ -3,12 +3,10 @@ from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-todelete = session.query(Client).filter(Client.name == "Yet another").first()
-if todelete is None:
+spec = session.query(Spec).filter(Spec.name == 'Really Super Long Spec Name Again').first()
+if not spec:
     session.close()
     exit()
-for spec in todelete.specs:
-    session.delete(spec)
-session.delete(todelete)
+session.delete(spec)
 session.commit()
 session.close()
