@@ -13,7 +13,6 @@
     z-index: 100;
     width: 500px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    /* border: 1px solid yellow; */
 }
 
 .notification-blur {
@@ -31,4 +30,8 @@
     color: white;
     width: 100px;
     margin-left: auto;
+}
+
+.notification-btn:focus {
+    outline: none;
 }

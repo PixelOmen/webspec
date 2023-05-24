@@ -46,5 +46,6 @@ class NotificationMsg extends Notification {
         const closebtn = this.createCloseBtn(this.btnLabel);
         this.container.appendChild(closebtn);
         this.setCloseBtn(closebtn, this.closefunc);
+        closebtn.focus();
     }
 }

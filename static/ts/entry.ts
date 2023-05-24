@@ -158,8 +158,9 @@ function setSubmitBtn() {
             } else {
                 var msg = "New Spec successfully created.";
             }
-            new notifications.NotificationMsg().displayNotification(msg);
-            setClientDropdown();
+            new notifications.NotificationMsg(() => {
+                window.location.href = `/`;
+            }).displayNotification(msg);
             return;
         }
     });
