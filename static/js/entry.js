@@ -173,7 +173,12 @@ function loadEditSpec() {
         if (!specName)
             return false;
         yield loading.loadSpec(specName, ELEMENTS.form, ELEMENTS.clientSelect);
-        return true;
+        if (currentUrl.get('clone')) {
+            return false;
+        }
+        else {
+            return true;
+        }
     });
 }
 function main() {

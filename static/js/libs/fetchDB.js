@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 export function fetchClients() {
     return __awaiter(this, void 0, void 0, function* () {
-        return fetch('/query/clients/all')
+        return fetch('/query/clients/client=all')
             .then((res) => res.json())
             .then((data) => { return data; });
     });

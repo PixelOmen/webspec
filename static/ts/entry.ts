@@ -171,7 +171,11 @@ async function loadEditSpec(): Promise<boolean> {
     const specName = currentUrl.get('spec');
     if (!specName) return false;
     await loading.loadSpec(specName, ELEMENTS.form, ELEMENTS.clientSelect);
-    return true;
+    if (currentUrl.get('clone')) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 

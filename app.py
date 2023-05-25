@@ -99,7 +99,7 @@ def query(table: str, query: str):
     if table.lower() not in QueryHandler.TABLES:
         return BackEndResponse(type="query", status="error", error=f"Invalid table name: {table}").json()
     query_str = urllib.parse.unquote(query)
-    return QueryHandler(table=table, query=query_str).run_query().json()
+    return QueryHandler().run_query(table=table, query=query_str).json()
 
 
 if __name__ == '__main__':

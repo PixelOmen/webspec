@@ -15,6 +15,7 @@ const ELEMENTS = {
     tableHeaders: document.getElementById('table-headers'),
     clientSelect: document.getElementById('client-select-dropdown'),
     editBtn: document.getElementById('btn-edit'),
+    cloneBtn: document.getElementById('btn-clone')
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -77,6 +78,17 @@ function createTableColumn(client, row, column, value, container) {
     columnDiv.innerHTML = value ? value : "N/A";
     container.appendChild(columnDiv);
 }
+function replaceBtn(btn, callback) {
+    const oldBtn = btn;
+    if (!oldBtn.parentNode) {
+        throw new Error("Old button has no parent node");
+    }
+    const newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    newBtn.addEventListener('click', callback);
+    newBtn.classList.remove('hidden');
+    return newBtn;
+}
 function setTableItems(specs) {
     ELEMENTS.tableItemsContainer.innerHTML = "";
     let row = 1;
@@ -94,18 +106,14 @@ function setTableItems(specs) {
         createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
         item.addEventListener('click', () => {
-            const oldBtn = ELEMENTS.editBtn;
-            if (!oldBtn.parentNode) {
-                throw new Error("Old button has no parent node");
-            }
-            const newBtn = oldBtn.cloneNode(true);
-            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-            ELEMENTS.editBtn = newBtn;
-            ELEMENTS.editBtn.addEventListener('click', () => {
+            ELEMENTS.editBtn = replaceBtn(ELEMENTS.editBtn, () => {
                 const specName = encodeURIComponent(spec.name);
                 window.location.href = `/nav/entry?spec=${specName}`;
             });
-            ELEMENTS.editBtn.classList.remove('hidden');
+            ELEMENTS.cloneBtn = replaceBtn(ELEMENTS.cloneBtn, () => {
+                const specName = encodeURIComponent(spec.name);
+                window.location.href = `/nav/entry?spec=${specName}&clone=true`;
+            });
             detailedView.display(spec);
         });
         row++;

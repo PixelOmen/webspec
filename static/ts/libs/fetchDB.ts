@@ -23,7 +23,7 @@ export interface SpecResponse {
 
 
 export async function fetchClients(): Promise<ClientResponse> {
-    return fetch('/query/clients/all')
+    return fetch('/query/clients/client=all')
         .then((res) => res.json())
         .then((data) => { return data; });
 }

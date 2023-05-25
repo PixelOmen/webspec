@@ -8,6 +8,7 @@ const ELEMENTS = {
     tableHeaders: document.getElementById('table-headers') as HTMLDivElement,
     clientSelect: document.getElementById('client-select-dropdown') as HTMLSelectElement,
     editBtn: document.getElementById('btn-edit') as HTMLButtonElement,
+    cloneBtn: document.getElementById('btn-clone') as HTMLButtonElement
 };
 
 const STATE = {
@@ -75,6 +76,18 @@ function createTableColumn(client: string, row: number, column: number,
     container.appendChild(columnDiv);
 }
 
+function replaceBtn(btn: HTMLButtonElement, callback: () => void): HTMLButtonElement {
+    const oldBtn = btn;
+    if (!oldBtn.parentNode) {
+        throw new Error("Old button has no parent node");
+    }
+    const newBtn = oldBtn.cloneNode(true) as HTMLButtonElement;
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    newBtn.addEventListener('click', callback);
+    newBtn.classList.remove('hidden');
+    return newBtn;
+}
+
 function setTableItems(specs: fetchDB.Spec[]): void {
     ELEMENTS.tableItemsContainer.innerHTML = "";
     let row = 1;
@@ -92,18 +105,14 @@ function setTableItems(specs: fetchDB.Spec[]): void {
         createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
         item.addEventListener('click', () => {
-            const oldBtn = ELEMENTS.editBtn;
-            if (!oldBtn.parentNode) {
-                throw new Error("Old button has no parent node");
-            }
-            const newBtn = oldBtn.cloneNode(true) as HTMLButtonElement;
-            oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-            ELEMENTS.editBtn = newBtn;
-            ELEMENTS.editBtn.addEventListener('click', () => {
+            ELEMENTS.editBtn = replaceBtn(ELEMENTS.editBtn, () => {
                 const specName = encodeURIComponent(spec.name);
                 window.location.href = `/nav/entry?spec=${specName}`;
             });
-            ELEMENTS.editBtn.classList.remove('hidden');
+            ELEMENTS.cloneBtn = replaceBtn(ELEMENTS.cloneBtn, () => {
+                const specName = encodeURIComponent(spec.name);
+                window.location.href = `/nav/entry?spec=${specName}&clone=true`;
+            });
             detailedView.display(spec);
         });
         row++;

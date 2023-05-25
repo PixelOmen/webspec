@@ -143,11 +143,17 @@
     min-width: 800px;
 }
 
-#btn-edit {
+.details-controls-container {
+    display: flex;
+    width: max-content;
     margin-left: auto;
+}
+
+.btn-controls {
     max-width: 150px;
     height: 30px;
     padding: 0;
+    margin-right: 10px;
 }
 
 #details-full-container h2 {
