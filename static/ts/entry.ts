@@ -8,9 +8,12 @@ const ELEMENTS = {
     clientSelect: document.getElementById('select-client') as HTMLSelectElement,
     clientName: document.getElementById('input-clientName') as HTMLInputElement,
     clientNameContainer: document.getElementById('input-clientName-container') as HTMLInputElement,
-    uploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
-    uploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
-    uploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
+    docUploadBtnVisual: document.getElementById('input-docUpload-visual') as HTMLFormElement,
+    docUploadBtnActual: document.getElementById('input-docUpload-actual') as HTMLFormElement,
+    docUploadFilename: document.getElementById('input-docUpload-filename') as HTMLFormElement,
+    templateUploadBtnVisual: document.getElementById('input-templateUpload-visual') as HTMLFormElement,
+    templateUploadBtnActual: document.getElementById('input-templateUpload-actual') as HTMLFormElement,
+    templateUploadFilename: document.getElementById('input-templateUpload-filename') as HTMLFormElement,
 };
 
 const STATE = {
@@ -129,13 +132,20 @@ async function setClientDropdown() {
     }
 }
 
-function setUploadBtn() {
-    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
-        ELEMENTS.uploadBtnActual.click();
+function setUploadBtns() {
+    ELEMENTS.docUploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.docUploadBtnActual.click();
     });
-    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
-        const file = ELEMENTS.uploadBtnActual.files[0];
-        ELEMENTS.uploadFilename.innerText = file.name;
+    ELEMENTS.docUploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.docUploadBtnActual.files[0];
+        ELEMENTS.docUploadFilename.innerText = file.name;
+    });
+    ELEMENTS.templateUploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.templateUploadBtnActual.click();
+    });
+    ELEMENTS.templateUploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.templateUploadBtnActual.files[0];
+        ELEMENTS.templateUploadFilename.innerText = file.name;
     });
 }
 
@@ -181,7 +191,7 @@ async function loadEditSpec(): Promise<boolean> {
 
 async function main() {
     await setClientDropdown();
-    setUploadBtn();
+    setUploadBtns();
     setSubmitBtn();
     STATE.isEditSession = await loadEditSpec();
 }

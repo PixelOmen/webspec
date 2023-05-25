@@ -120,6 +120,7 @@ function createFileSubItem(label, filename, base64str, oneline) {
     if (oneline) {
         subItemContainer.classList.add('details-subItem-block');
     }
+    fileAnchor.style.textAlign = "center";
     return subItemContainer;
 }
 function general(spec) {
@@ -147,8 +148,8 @@ function formatting(spec) {
 function video(spec) {
     const sectionContainer = createSection("Video", ELEMENTS.video);
     sectionContainer.append(createTextSubItem("Resolution", spec.resolution, false, true));
-    sectionContainer.append(createTextSubItem("Aspect Ratio", spec.aspect_ratio, false, true));
     sectionContainer.append(createTextSubItem("Framerate", spec.framerate, false, true));
+    sectionContainer.append(createTextSubItem("Aspect Ratio", spec.aspect_ratio, false, true));
     sectionContainer.append(createTextSubItem("Codec", spec.video_codec, false, true));
     sectionContainer.append(createTextSubItem("Profile", spec.video_codec_profile, false, true));
     sectionContainer.append(createTextSubItem("Bitrate", spec.video_bitrate, false, true));
@@ -180,6 +181,7 @@ function additional(spec) {
     const sectionContainer = createSection("Additional", ELEMENTS.additional);
     sectionContainer.append(createIsRequiredSubItem("Artwork", spec.artwork_required, spec.artwork_details, true));
     sectionContainer.append(createIsRequiredSubItem("Reports/Forms", spec.reports_required, spec.reports_details, true));
+    sectionContainer.append(createFileSubItem("Form Template", spec.template_filename, spec.template));
     sectionContainer.append(createTextSubItem("Notes", spec.notes, true));
 }
 function clear() {

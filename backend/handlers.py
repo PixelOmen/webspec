@@ -17,10 +17,13 @@ class UploadHandler:
         self._status = "inprogress"
         self._error = ""
 
-    def _handle_source(self) -> None:
+    def _handle_files(self) -> None:
         source = self.files.get("source")
+        template = self.files.get("template")
         self.jsondata["source_filename"] = source.filename if source else None
         self.jsondata["source"] = source.read() if source else None
+        self.jsondata["template_filename"] = template.filename if template else None
+        self.jsondata["template"] = template.read() if template else None
 
     def _handle_spec_name(self, session: "Session") -> None:
         spec_name = self.jsondata.get("name")
@@ -62,7 +65,7 @@ class UploadHandler:
 
     def send(self) -> None:
         session = SESSIONFACTORY()
-        self._handle_source()
+        self._handle_files()
         self._handle_client(session)
         if self._status == "error":
             session.close()

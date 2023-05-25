@@ -4,7 +4,6 @@ from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-spec = session.query(Spec).filter(Spec.name == "ABC3").first()
-session.delete(spec)
+utils.temp_to_spec(session)
 session.commit()
 session.close()

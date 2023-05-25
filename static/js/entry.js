@@ -15,9 +15,12 @@ const ELEMENTS = {
     clientSelect: document.getElementById('select-client'),
     clientName: document.getElementById('input-clientName'),
     clientNameContainer: document.getElementById('input-clientName-container'),
-    uploadBtnVisual: document.getElementById('input-docUpload-visual'),
-    uploadBtnActual: document.getElementById('input-docUpload-actual'),
-    uploadFilename: document.getElementById('input-docUpload-filename'),
+    docUploadBtnVisual: document.getElementById('input-docUpload-visual'),
+    docUploadBtnActual: document.getElementById('input-docUpload-actual'),
+    docUploadFilename: document.getElementById('input-docUpload-filename'),
+    templateUploadBtnVisual: document.getElementById('input-templateUpload-visual'),
+    templateUploadBtnActual: document.getElementById('input-templateUpload-actual'),
+    templateUploadFilename: document.getElementById('input-templateUpload-filename'),
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -130,13 +133,20 @@ function setClientDropdown() {
         }
     });
 }
-function setUploadBtn() {
-    ELEMENTS.uploadBtnVisual.addEventListener('click', () => {
-        ELEMENTS.uploadBtnActual.click();
+function setUploadBtns() {
+    ELEMENTS.docUploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.docUploadBtnActual.click();
     });
-    ELEMENTS.uploadBtnActual.addEventListener('change', () => {
-        const file = ELEMENTS.uploadBtnActual.files[0];
-        ELEMENTS.uploadFilename.innerText = file.name;
+    ELEMENTS.docUploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.docUploadBtnActual.files[0];
+        ELEMENTS.docUploadFilename.innerText = file.name;
+    });
+    ELEMENTS.templateUploadBtnVisual.addEventListener('click', () => {
+        ELEMENTS.templateUploadBtnActual.click();
+    });
+    ELEMENTS.templateUploadBtnActual.addEventListener('change', () => {
+        const file = ELEMENTS.templateUploadBtnActual.files[0];
+        ELEMENTS.templateUploadFilename.innerText = file.name;
     });
 }
 function setSubmitBtn() {
@@ -184,7 +194,7 @@ function loadEditSpec() {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield setClientDropdown();
-        setUploadBtn();
+        setUploadBtns();
         setSubmitBtn();
         STATE.isEditSession = yield loadEditSpec();
     });

@@ -1,5 +1,4 @@
 import * as fetchDB from "./fetchDB.js";
-import * as detailedView from './detailedview.js';
 import * as notifications from './notifications.js';
 
 interface NamedElement extends Element {
@@ -15,12 +14,11 @@ function assertExists(spec: fetchDB.Spec, element: NamedElement): boolean {
 }
 
 function setSource(spec: fetchDB.Spec): void {
-    const source = spec.source;
-    if (!source) return;
+    if (!spec.source && !spec.template) return;
     const msg = "** Warning **<br><br> Due to browser security restrictions, " +
-                "the original source document must be uploaded again in order to retain the document " +
+                "the source documents and templates must be uploaded again in order to retain them " +
                 "after editing. <br><br>" + 
-                "Please download the document via the 'Browse' page before editing this spec.";
+                "Please download the documents/templates via the 'Browse' page before editing this spec.";
     new notifications.NotificationMsg().displayNotification(msg);
 }
 
@@ -33,7 +31,7 @@ export async function loadSpec(specName: string, form: HTMLFormElement, clientSe
     for (const formElem of form.elements) {
         switch (true) {
             case formElem instanceof HTMLInputElement:
-                if (formElem.id == "input-docUpload-actual") break;
+                if (formElem.classList.contains("input-fileUpload-actual")) break;
                 const inputElem = formElem as HTMLInputElement;
                 assertExists(spec.output.specs[0], inputElem);
                 const value = spec.output.specs[0][inputElem.name];

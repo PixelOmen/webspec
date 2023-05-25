@@ -17,13 +17,12 @@ function assertExists(spec, element) {
     return true;
 }
 function setSource(spec) {
-    const source = spec.source;
-    if (!source)
+    if (!spec.source && !spec.template)
         return;
     const msg = "** Warning **<br><br> Due to browser security restrictions, " +
-        "the original source document must be uploaded again in order to retain the document " +
+        "the source documents and templates must be uploaded again in order to retain them " +
         "after editing. <br><br>" +
-        "Please download the document via the 'Browse' page before editing this spec.";
+        "Please download the documents/templates via the 'Browse' page before editing this spec.";
     new notifications.NotificationMsg().displayNotification(msg);
 }
 export function loadSpec(specName, form, clientSelect) {
@@ -36,7 +35,7 @@ export function loadSpec(specName, form, clientSelect) {
         for (const formElem of form.elements) {
             switch (true) {
                 case formElem instanceof HTMLInputElement:
-                    if (formElem.id == "input-docUpload-actual")
+                    if (formElem.classList.contains("input-fileUpload-actual"))
                         break;
                     const inputElem = formElem;
                     assertExists(spec.output.specs[0], inputElem);
