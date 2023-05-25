@@ -78,11 +78,11 @@
 }
 
 .table-column-container .table-column:nth-child(1) {
-    overflow: visible;
+    width: 80px;
 }
 
 .table-column-container .table-column:nth-child(2) {
-    width: 200px;
+    overflow: visible;
 }
 
 .table-column-container .table-column:nth-child(3) {
@@ -90,7 +90,7 @@
 }
 
 .table-column-container .table-column:nth-child(4) {
-    width: 120px;
+    width: 200px;
 }
 
 .table-column-container .table-column:nth-child(5) {
@@ -98,7 +98,7 @@
 }
 
 .table-column-container .table-column:nth-child(6) {
-    width: 130px;
+    width: 120px;
 }
 
 .table-column-container .table-column:nth-child(7) {
@@ -106,6 +106,10 @@
 }
 
 .table-column-container .table-column:nth-child(8) {
+    width: 130px;
+}
+
+.table-column-container .table-column:nth-child(9) {
     width: 120px;
 }
 

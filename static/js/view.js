@@ -96,14 +96,15 @@ function setTableItems(specs) {
         const item = document.createElement('div');
         item.classList.add('table-item');
         item.classList.add('table-column-container');
-        createTableColumn(spec.client_name, row, 1, spec.name, item);
-        createTableColumn(spec.client_name, row, 2, spec.created, item);
-        createTableColumn(spec.client_name, row, 3, spec.updated, item);
-        createTableColumn(spec.client_name, row, 4, spec.resolution, item);
-        createTableColumn(spec.client_name, row, 5, spec.framerate, item);
-        createTableColumn(spec.client_name, row, 6, spec.video_codec, item);
-        createTableColumn(spec.client_name, row, 7, spec.audio_codec, item);
-        createTableColumn(spec.client_name, row, 8, spec.start_timecode, item);
+        createTableColumn(spec.client_name, row, 1, spec.id, item);
+        createTableColumn(spec.client_name, row, 2, spec.name, item);
+        createTableColumn(spec.client_name, row, 3, spec.created, item);
+        createTableColumn(spec.client_name, row, 4, spec.updated, item);
+        createTableColumn(spec.client_name, row, 5, spec.resolution, item);
+        createTableColumn(spec.client_name, row, 6, spec.framerate, item);
+        createTableColumn(spec.client_name, row, 7, spec.video_codec, item);
+        createTableColumn(spec.client_name, row, 8, spec.audio_codec, item);
+        createTableColumn(spec.client_name, row, 9, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
         item.addEventListener('click', () => {
             ELEMENTS.editBtn = replaceBtn(ELEMENTS.editBtn, () => {
@@ -142,8 +143,8 @@ function setColumnWidths() {
     });
     rows.forEach((row) => {
         const columns = row.querySelectorAll('.table-column');
-        const columnDiv = columns[0];
-        columnDiv.style.minWidth = `${maxColumnWidths[0]}px`;
+        const columnDiv = columns[1];
+        columnDiv.style.minWidth = `${maxColumnWidths[1]}px`;
     });
 }
 function main() {

@@ -129,7 +129,7 @@ function general(spec) {
     sectionContainer.append(createTextSubItem("Spec", spec.name));
     sectionContainer.append(createTextSubItem("Created", spec.created));
     sectionContainer.append(createTextSubItem("Updated", spec.updated));
-    sectionContainer.append(createFileSubItem("Source", spec.source_filename, spec.source));
+    sectionContainer.append(createFileSubItem("Sources", spec.source_filename, spec.source));
     sectionContainer.append(createTextSubItem("Description", spec.description, true));
 }
 function formatting(spec) {
@@ -181,7 +181,7 @@ function additional(spec) {
     const sectionContainer = createSection("Additional", ELEMENTS.additional);
     sectionContainer.append(createIsRequiredSubItem("Artwork", spec.artwork_required, spec.artwork_details, true));
     sectionContainer.append(createIsRequiredSubItem("Reports/Forms", spec.reports_required, spec.reports_details, true));
-    sectionContainer.append(createFileSubItem("Form Template", spec.template_filename, spec.template));
+    sectionContainer.append(createFileSubItem("Form Templates", spec.template_filename, spec.template));
     sectionContainer.append(createTextSubItem("Notes", spec.notes, true));
 }
 function clear() {
