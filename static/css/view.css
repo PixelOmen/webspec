@@ -206,5 +206,6 @@
 }
 
 .details-subItem-block p {
-    padding-left: 20px;
+    max-width: max-content;
+    padding: 10px 20px;
 }

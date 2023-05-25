@@ -61,6 +61,29 @@
             <hr>
 
             <div class="details-container">
+
+                <div class="required-details-container section-start">
+                    <div class="checkbox-container">
+                        <label for="slate_required">Slate</label>
+                        <input type="checkbox" name="slate_required" class="required-details-required"
+                            id="checkbox-slate_required" value="false">
+                    </div>
+                    <div class="textarea-container required-details-details">
+                        <textarea name="slate_details" id="textarea-slate_details" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="required-details-container section-start">
+                    <div class="checkbox-container">
+                        <label for="textless_required">Textless</label>
+                        <input type="checkbox" name="textless_required" class="required-details-required"
+                            id="checkbox-textless_required" value="false">
+                    </div>
+                    <div class="textarea-container required-details-details">
+                        <textarea name="textless_details" id="textarea-textless_details" rows="3"></textarea>
+                    </div>
+                </div>
+
                 <div class="required-details-container section-start">
                     <div class="checkbox-container">
                         <label for="burnins_required">Burnin TC/Names</label>
@@ -80,17 +103,6 @@
                     </div>
                     <div class="textarea-container required-details-details">
                         <textarea name="watermark_details" id="textarea-watermark_details" rows="3"></textarea>
-                    </div>
-                </div>
-
-                <div class="required-details-container section-start">
-                    <div class="checkbox-container">
-                        <label for="subcap_required">Captions/Subtitles</label>
-                        <input type="checkbox" name="subcap_required" class="required-details-required"
-                            id="checkbox-subcap_required" value="false">
-                    </div>
-                    <div class="textarea-container required-details-details">
-                        <textarea name="subcap_details" id="textarea-subcap_details" rows="3"></textarea>
                     </div>
                 </div>
 
@@ -129,7 +141,7 @@
 
                 <div class="required-details-container section-start">
                     <div class="checkbox-container">
-                        <label for="artwork_required">Artwork Required</label>
+                        <label for="artwork_required">Artwork</label>
                         <input type="checkbox" name="artwork_required" class="required-details-required"
                             id="checkbox-artwork_required" value="false">
                     </div>
@@ -162,14 +174,15 @@
 
                 <div class="required-details-container section-start">
                     <div class="checkbox-container">
-                        <label for="slate_required">Slate</label>
-                        <input type="checkbox" name="slate_required" class="required-details-required"
-                            id="checkbox-slate_required" value="false">
+                        <label for="subcap_required">Captions/Subtitles</label>
+                        <input type="checkbox" name="subcap_required" class="required-details-required"
+                            id="checkbox-subcap_required" value="false">
                     </div>
                     <div class="textarea-container required-details-details">
-                        <textarea name="slate_details" id="textarea-slate_details" rows="3"></textarea>
+                        <textarea name="subcap_details" id="textarea-subcap_details" rows="3"></textarea>
                     </div>
                 </div>
+
             </div>
 
             <hr class="section-start">
@@ -236,6 +249,13 @@
 
             <div class="section-container section-start">
                 <div class="single-container">
+                    <label for="video_container">Video Container</label>
+                    <div class="textarea-container">
+                        <textarea name="video_container" id="input-single-video_container" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="single-container">
                     <label for="video_codec">Video Codec</label>
                     <div class="textarea-container">
                         <textarea name="video_codec" id="input-single-video_codec" rows="2"></textarea>
@@ -267,6 +287,13 @@
             <hr class="section-start">
 
             <div class="section-container section-start">
+                <div class="single-container">
+                    <label for="audio_container">Audio Container</label>
+                    <div class="textarea-container">
+                        <textarea name="audio_container" id="input-single-audio_container" rows="2"></textarea>
+                    </div>
+                </div>
+
                 <div class="single-container">
                     <label for="audio_codec">Audio Codec</label>
                     <div class="textarea-container">

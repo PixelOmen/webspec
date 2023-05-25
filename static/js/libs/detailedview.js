@@ -108,14 +108,13 @@ function createFileSubItem(label, filename, base64str, oneline) {
     const fileAnchor = document.createElement('a');
     fileAnchor.href = fileURL;
     fileAnchor.innerText = filename;
-    if ((navigator.userAgent.indexOf("Edg") < 0 &&
-        navigator.userAgent.indexOf("Chrome") < 0 &&
-        navigator.userAgent.indexOf("Firefox") < 0) ||
-        ext != "pdf") {
-        fileAnchor.download = filename;
+    if ((navigator.userAgent.indexOf("Edg") != -1 ||
+        navigator.userAgent.indexOf("Chrome") != -1 ||
+        navigator.userAgent.indexOf("Firefox") != -1) && ext == "pdf") {
+        fileAnchor.target = "_blank";
     }
     else {
-        fileAnchor.target = "_blank";
+        fileAnchor.download = filename;
     }
     subItemContainer.append(fileAnchor);
     if (oneline) {
@@ -137,11 +136,12 @@ function formatting(spec) {
     sectionContainer.append(createTextSubItem("Start Timecode", spec.start_timecode, false, true));
     sectionContainer.append(createBoolSubItem("Dropframe", spec.dropframe));
     sectionContainer.append(createTextSubItem("Naming Convention", spec.naming_convention, true));
+    sectionContainer.append(createIsRequiredSubItem("Subtitles/Captions", spec.subcap_required, spec.subcap_details, true));
     sectionContainer.append(createTextSubItem("Head/Tail", spec.headtailbuild, true));
     sectionContainer.append(createIsRequiredSubItem("Slate", spec.slate_required, spec.slate_details, true));
+    sectionContainer.append(createIsRequiredSubItem("Textless", spec.textless_required, spec.textless_details, true));
     sectionContainer.append(createIsRequiredSubItem("Burn-ins", spec.burnins_required, spec.burnins_details, true));
     sectionContainer.append(createIsRequiredSubItem("Forensic", spec.watermark_required, spec.watermark_details, true));
-    sectionContainer.append(createIsRequiredSubItem("Subtitles/Captions", spec.subcap_required, spec.subcap_details, true));
     sectionContainer.append(createIsRequiredSubItem("Act/Commercial Breaks", spec.act_breaks_required, spec.act_breaks_details, true));
 }
 function video(spec) {
@@ -154,6 +154,7 @@ function video(spec) {
     sectionContainer.append(createTextSubItem("Bitrate", spec.video_bitrate, false, true));
     sectionContainer.append(createTextSubItem("Bitdepth", spec.video_bitdepth, false, true));
     sectionContainer.append(createTextSubItem("Colorspace", spec.colorspace, false, true));
+    sectionContainer.append(createTextSubItem("Container", spec.video_container, false, true));
 }
 function audio(spec) {
     const sectionContainer = createSection("Audio", ELEMENTS.audio);
@@ -163,8 +164,9 @@ function audio(spec) {
     sectionContainer.append(createTextSubItem("Bitdepth", spec.audio_bitdepth, false, true));
     sectionContainer.append(createBoolSubItem("LKFS", spec.lkfs));
     sectionContainer.append(createIsRequiredSubItem("Audio Description (AD)", spec.audio_description_required, spec.audio_description_details, true));
-    sectionContainer.append(createTextSubItem("Audio Config", spec.audio_config, true));
-    sectionContainer.append(createTextSubItem("Audio Details", spec.audio_details));
+    sectionContainer.append(createTextSubItem("Container", spec.audio_container, false, true));
+    sectionContainer.append(createTextSubItem("Audio Config", spec.audio_config, true, false, true));
+    sectionContainer.append(createTextSubItem("Audio Details", spec.audio_details, true, false, true));
 }
 function metadata(spec) {
     const sectionContainer = createSection("Metadata", ELEMENTS.metadata);
