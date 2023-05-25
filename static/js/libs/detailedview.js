@@ -125,10 +125,11 @@ function createFileSubItem(label, filename, base64str, oneline) {
 }
 function general(spec) {
     const sectionContainer = createSection("General", ELEMENTS.general);
-    sectionContainer.append(createTextSubItem("Client", spec.client_name));
-    sectionContainer.append(createTextSubItem("Spec", spec.name));
-    sectionContainer.append(createTextSubItem("Created", spec.created));
-    sectionContainer.append(createTextSubItem("Updated", spec.updated));
+    sectionContainer.append(createTextSubItem("Spec ID", spec.id, false, true));
+    sectionContainer.append(createTextSubItem("Spec Name", spec.name, false, true));
+    sectionContainer.append(createTextSubItem("Client", spec.client_name, false, true));
+    sectionContainer.append(createTextSubItem("Created", spec.created, false, true));
+    sectionContainer.append(createTextSubItem("Updated", spec.updated, false, true));
     sectionContainer.append(createFileSubItem("Sources", spec.source_filename, spec.source));
     sectionContainer.append(createTextSubItem("Description", spec.description, true));
 }
