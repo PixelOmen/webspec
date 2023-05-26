@@ -1,17 +1,19 @@
 import * as fetchDB from "./fetchDB.js";
 export { display, base64ToBinary };
 
-const ELEMENTS: { [key: string]: HTMLDivElement } = {
+const ELEMENTS: { [key: string]: HTMLElement } = {
     container: document.getElementById('details-full-container') as HTMLDivElement,
     general: document.getElementById('details-general') as HTMLDivElement,
     formatting: document.getElementById('details-formatting') as HTMLDivElement,
     video: document.getElementById('details-video') as HTMLDivElement,
     audio: document.getElementById('details-audio') as HTMLDivElement,
     metadata: document.getElementById('details-metadata') as HTMLDivElement,
-    additional: document.getElementById('details-additional') as HTMLDivElement
+    additional: document.getElementById('details-additional') as HTMLDivElement,
+    editBtn: document.getElementById('btn-edit') as HTMLButtonElement,
+    cloneBtn: document.getElementById('btn-clone') as HTMLButtonElement
 }
 
-function createSection(name: string, parent: HTMLDivElement): HTMLDivElement {
+function createSection(name: string, parent: HTMLElement): HTMLDivElement {
     const sectionHeader = document.createElement('h2');
     sectionHeader.classList.add('details-section-header');
     sectionHeader.innerText = name;
@@ -217,13 +219,35 @@ function additional(spec: fetchDB.Spec): void {
 
 function clear(): void {
     for (const section in ELEMENTS) {
-        if (ELEMENTS[section] == ELEMENTS.container) continue;
+        if (ELEMENTS[section] == ELEMENTS.container || ELEMENTS[section] instanceof HTMLButtonElement) continue;
         ELEMENTS[section].innerHTML = "";
     }
 }
 
+function replaceBtn(btn: HTMLButtonElement, callback: () => void): HTMLButtonElement {
+    const oldBtn = btn;
+    if (!oldBtn.parentNode) {
+        throw new Error("Old button has no parent node");
+    }
+    const newBtn = oldBtn.cloneNode(true) as HTMLButtonElement;
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    newBtn.addEventListener('click', callback);
+    newBtn.classList.remove('hidden');
+    return newBtn;
+}
+
 function display(spec: fetchDB.Spec): void {
     clear();
+    const editBtn = ELEMENTS.editBtn as HTMLButtonElement;
+    const cloneBtn = ELEMENTS.cloneBtn as HTMLButtonElement;
+    ELEMENTS.editBtn = replaceBtn(editBtn, () => {
+        const specName = encodeURIComponent(spec.name);
+        window.location.href = `/nav/entry?spec=${specName}`;
+    });
+    ELEMENTS.cloneBtn = replaceBtn(cloneBtn, () => {
+        const specName = encodeURIComponent(spec.name);
+        window.location.href = `/nav/entry?spec=${specName}&clone=true`;
+    });
     general(spec);
     formatting(spec);
     video(spec);

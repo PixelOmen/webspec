@@ -4,6 +4,6 @@ from db.config import SESSIONFACTORY, ENGINE
 
 
 session = SESSIONFACTORY()
-utils.temp_to_spec(session)
+utils.delete_client("Showtime3", session)
 session.commit()
 session.close()

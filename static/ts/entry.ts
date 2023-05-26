@@ -169,7 +169,8 @@ function setSubmitBtn() {
                 var msg = "New Spec successfully created.";
             }
             new notifications.NotificationMsg(() => {
-                window.location.href = `/`;
+                const specNameElement = document.getElementById('input-specName') as HTMLInputElement;
+                window.location.href = `/nav/view?spec=${specNameElement.value}`;
             }).displayNotification(msg);
             return;
         }

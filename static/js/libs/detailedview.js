@@ -6,7 +6,9 @@ const ELEMENTS = {
     video: document.getElementById('details-video'),
     audio: document.getElementById('details-audio'),
     metadata: document.getElementById('details-metadata'),
-    additional: document.getElementById('details-additional')
+    additional: document.getElementById('details-additional'),
+    editBtn: document.getElementById('btn-edit'),
+    cloneBtn: document.getElementById('btn-clone')
 };
 function createSection(name, parent) {
     const sectionHeader = document.createElement('h2');
@@ -187,13 +189,34 @@ function additional(spec) {
 }
 function clear() {
     for (const section in ELEMENTS) {
-        if (ELEMENTS[section] == ELEMENTS.container)
+        if (ELEMENTS[section] == ELEMENTS.container || ELEMENTS[section] instanceof HTMLButtonElement)
             continue;
         ELEMENTS[section].innerHTML = "";
     }
 }
+function replaceBtn(btn, callback) {
+    const oldBtn = btn;
+    if (!oldBtn.parentNode) {
+        throw new Error("Old button has no parent node");
+    }
+    const newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    newBtn.addEventListener('click', callback);
+    newBtn.classList.remove('hidden');
+    return newBtn;
+}
 function display(spec) {
     clear();
+    const editBtn = ELEMENTS.editBtn;
+    const cloneBtn = ELEMENTS.cloneBtn;
+    ELEMENTS.editBtn = replaceBtn(editBtn, () => {
+        const specName = encodeURIComponent(spec.name);
+        window.location.href = `/nav/entry?spec=${specName}`;
+    });
+    ELEMENTS.cloneBtn = replaceBtn(cloneBtn, () => {
+        const specName = encodeURIComponent(spec.name);
+        window.location.href = `/nav/entry?spec=${specName}&clone=true`;
+    });
     general(spec);
     formatting(spec);
     video(spec);

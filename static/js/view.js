@@ -14,13 +14,12 @@ const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container'),
     tableHeaders: document.getElementById('table-headers'),
     clientSelect: document.getElementById('client-select-dropdown'),
-    editBtn: document.getElementById('btn-edit'),
-    cloneBtn: document.getElementById('btn-clone')
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
     sessionID: "",
     sendAllowed: true,
+    clientsLoaded: false,
     username: "",
     password: ""
 };
@@ -56,6 +55,10 @@ function setClientDropdown() {
     ELEMENTS.clientSelect.addEventListener('change', () => __awaiter(this, void 0, void 0, function* () {
         const clientSpecs = yield fetchDB.fetchClientSpecs(ELEMENTS.clientSelect.value);
         setTableItems(clientSpecs.output.specs);
+        if (!STATE.clientsLoaded) {
+            STATE.clientsLoaded = true;
+            window.dispatchEvent(new Event('clientsLoaded'));
+        }
     }));
     fetchDB.fetchClients().then((res) => {
         if (res.status == "error") {
@@ -78,17 +81,6 @@ function createTableColumn(client, row, column, value, container) {
     columnDiv.innerHTML = value ? value : "N/A";
     container.appendChild(columnDiv);
 }
-function replaceBtn(btn, callback) {
-    const oldBtn = btn;
-    if (!oldBtn.parentNode) {
-        throw new Error("Old button has no parent node");
-    }
-    const newBtn = oldBtn.cloneNode(true);
-    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-    newBtn.addEventListener('click', callback);
-    newBtn.classList.remove('hidden');
-    return newBtn;
-}
 function setTableItems(specs) {
     ELEMENTS.tableItemsContainer.innerHTML = "";
     let row = 1;
@@ -107,14 +99,6 @@ function setTableItems(specs) {
         createTableColumn(spec.client_name, row, 9, spec.start_timecode, item);
         ELEMENTS.tableItemsContainer.appendChild(item);
         item.addEventListener('click', () => {
-            ELEMENTS.editBtn = replaceBtn(ELEMENTS.editBtn, () => {
-                const specName = encodeURIComponent(spec.name);
-                window.location.href = `/nav/entry?spec=${specName}`;
-            });
-            ELEMENTS.cloneBtn = replaceBtn(ELEMENTS.cloneBtn, () => {
-                const specName = encodeURIComponent(spec.name);
-                window.location.href = `/nav/entry?spec=${specName}&clone=true`;
-            });
             detailedView.display(spec);
         });
         row++;
@@ -147,8 +131,29 @@ function setColumnWidths() {
         columnDiv.style.minWidth = `${maxColumnWidths[1]}px`;
     });
 }
+function loadSpecURL() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentUrl = new URLSearchParams(window.location.search);
+        const specName = currentUrl.get('spec');
+        if (!specName)
+            return true;
+        const response = yield fetchDB.fetchSpec(specName);
+        if (response.status == "error") {
+            new notifications.NotificationMsg().displayNotification(response.error);
+            return true;
+        }
+        const client = response.output.specs[0].client_name;
+        ELEMENTS.clientSelect.value = client;
+        ELEMENTS.clientSelect.dispatchEvent(new Event('change'));
+        detailedView.display(response.output.specs[0]);
+        return true;
+    });
+}
 function main() {
-    setClientDropdown();
-    window.addEventListener('resize', setColumnWidths);
+    return __awaiter(this, void 0, void 0, function* () {
+        setClientDropdown();
+        window.addEventListener('resize', setColumnWidths);
+        window.addEventListener('clientsLoaded', loadSpecURL);
+    });
 }
 main();
