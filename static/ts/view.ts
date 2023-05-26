@@ -7,6 +7,7 @@ const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container') as HTMLDivElement,
     tableHeaders: document.getElementById('table-headers') as HTMLDivElement,
     clientSelect: document.getElementById('client-select-dropdown') as HTMLSelectElement,
+    searchContainer: document.getElementById("search-container-main") as HTMLDivElement
 };
 
 const STATE = {
@@ -131,26 +132,27 @@ function setColumnWidths(): void {
     });
 }
 
-async function loadSpecURL(): Promise<boolean> {        
+async function loadSpecURL(): Promise<void> {        
     const currentUrl = new URLSearchParams(window.location.search);
     const specName = currentUrl.get('spec');
-    if (!specName) return true;
+    if (!specName) return;
     const response = await fetchDB.fetchSpec(specName);
     if (response.status == "error") {
         new notifications.NotificationMsg().displayNotification(response.error);
-        return true;
+        return;
     }
     const client = response.output.specs[0].client_name;
     ELEMENTS.clientSelect.value = client;
     ELEMENTS.clientSelect.dispatchEvent(new Event('change'));
     detailedView.display(response.output.specs[0]);
-    return true;
+    return;
 }
 
 async function main() {
     setClientDropdown();
     window.addEventListener('resize', setColumnWidths);
     window.addEventListener('clientsLoaded', loadSpecURL);
+    ELEMENTS.searchContainer.classList.remove('hidden');
 }
 
 main();

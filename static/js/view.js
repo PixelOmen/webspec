@@ -14,6 +14,7 @@ const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container'),
     tableHeaders: document.getElementById('table-headers'),
     clientSelect: document.getElementById('client-select-dropdown'),
+    searchContainer: document.getElementById("search-container-main")
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -136,17 +137,17 @@ function loadSpecURL() {
         const currentUrl = new URLSearchParams(window.location.search);
         const specName = currentUrl.get('spec');
         if (!specName)
-            return true;
+            return;
         const response = yield fetchDB.fetchSpec(specName);
         if (response.status == "error") {
             new notifications.NotificationMsg().displayNotification(response.error);
-            return true;
+            return;
         }
         const client = response.output.specs[0].client_name;
         ELEMENTS.clientSelect.value = client;
         ELEMENTS.clientSelect.dispatchEvent(new Event('change'));
         detailedView.display(response.output.specs[0]);
-        return true;
+        return;
     });
 }
 function main() {
@@ -154,6 +155,7 @@ function main() {
         setClientDropdown();
         window.addEventListener('resize', setColumnWidths);
         window.addEventListener('clientsLoaded', loadSpecURL);
+        ELEMENTS.searchContainer.classList.remove('hidden');
     });
 }
 main();
