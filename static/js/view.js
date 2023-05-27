@@ -14,7 +14,10 @@ const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container'),
     tableHeaders: document.getElementById('table-headers'),
     clientSelect: document.getElementById('client-select-dropdown'),
-    searchContainer: document.getElementById("search-container-main")
+    searchContainer: document.getElementById("search-container-main"),
+    searchInput: document.getElementById("search-container-main-input"),
+    searchResultContainer: document.getElementById("search-results-container-main"),
+    searchResultList: document.getElementById("search-results-list")
 };
 const STATE = {
     CONNECTION: new WebSocket(`ws://${window.location.host}/connect`),
@@ -132,6 +135,61 @@ function setColumnWidths() {
         columnDiv.style.minWidth = `${maxColumnWidths[1]}px`;
     });
 }
+function setSearchResults(allSpecNames, query) {
+    ELEMENTS.searchResultList.innerHTML = "";
+    let found = 0;
+    for (const specName of allSpecNames) {
+        if (!specName.toLowerCase().includes(query)) {
+            continue;
+        }
+        const result = document.createElement('li');
+        result.classList.add('search-result');
+        result.innerHTML = specName;
+        ELEMENTS.searchResultList.appendChild(result);
+        result.addEventListener('click', () => {
+            window.location.href = `/nav/view?spec=${specName}`;
+        });
+        found++;
+    }
+    if (!found) {
+        const result = document.createElement('li');
+        result.classList.add('search-result');
+        result.innerHTML = "No results found";
+        ELEMENTS.searchResultList.appendChild(result);
+    }
+}
+function setSearchbar() {
+    return __awaiter(this, void 0, void 0, function* () {
+        ELEMENTS.searchContainer.classList.remove('hidden');
+        const containerPosition = ELEMENTS.searchContainer.getBoundingClientRect();
+        ELEMENTS.searchResultContainer.style.top = `${containerPosition.bottom}px`;
+        ELEMENTS.searchResultContainer.style.left = `${containerPosition.left}px`;
+        const response = yield fetchDB.fetchSpecNames();
+        if (response.status != 'ok') {
+            console.error(response.error);
+            return;
+        }
+        const specNames = response.output.specNames;
+        ELEMENTS.searchInput.addEventListener('input', () => {
+            const searchValue = ELEMENTS.searchInput.value.toLowerCase();
+            if (searchValue) {
+                ELEMENTS.searchResultContainer.classList.remove('hidden');
+                console.log("keydown event added");
+            }
+            else {
+                ELEMENTS.searchResultContainer.classList.add('hidden');
+                console.log("keydown event removed");
+            }
+            setSearchResults(specNames, searchValue);
+        });
+        ELEMENTS.searchInput.addEventListener('focusout', () => {
+            setTimeout(() => {
+                ELEMENTS.searchResultContainer.classList.add('hidden');
+                console.log("keydown event removed");
+            }, 100);
+        });
+    });
+}
 function loadSpecURL() {
     return __awaiter(this, void 0, void 0, function* () {
         const currentUrl = new URLSearchParams(window.location.search);
@@ -153,9 +211,9 @@ function loadSpecURL() {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         setClientDropdown();
+        setSearchbar();
         window.addEventListener('resize', setColumnWidths);
         window.addEventListener('clientsLoaded', loadSpecURL);
-        ELEMENTS.searchContainer.classList.remove('hidden');
     });
 }
 main();

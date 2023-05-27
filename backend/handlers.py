@@ -146,10 +146,12 @@ class QueryHandler:
         querydict = parse_qs(query)
         spec = querydict.get("spec")
         client = querydict.get("client")
+        namesonly = querydict.get("namesonly")
         if not spec and not client:
             return BackEndResponse(type="specquery", status="error", error=f"Spec query is none: {query}")
         if spec and spec[0].lower() == "all":
-            return self.all_specs()
+            namesonly = False if namesonly is None else True
+            return self.all_specs(namesonly)
         elif client and not spec:
             return self.specs_by_client(client[0])
         elif spec:
@@ -161,7 +163,12 @@ class QueryHandler:
         self._close_session()
         return BackEndResponse(type="clientquery", output={"clients": [client.name for client in clients]})
 
-    def all_specs(self) -> BackEndResponse:
+    def all_specs(self, namesonly: bool=False) -> BackEndResponse:
+        if namesonly:
+            session = self._get_session()
+            names = [name[0] for name in session.query(Spec.name).all()]
+            self._close_session()
+            return BackEndResponse(type="specquery", output={"specNames": names})
         specs = self._all_specs()
         self._close_session()
         return BackEndResponse(type="specquery", output={"specs": [spec.jsondict() for spec in specs]})

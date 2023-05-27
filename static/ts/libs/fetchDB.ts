@@ -21,6 +21,15 @@ export interface SpecResponse {
     }
 }
 
+export interface SpecNameResponse {
+    type: string;
+    status: string;
+    error: string;
+    output: {
+        "specNames": string[];
+    }
+}
+
 
 export async function fetchClients(): Promise<ClientResponse> {
     return fetch('/query/clients/client=all')
@@ -40,6 +49,12 @@ export function fetchSpec(specID: string): Promise<SpecResponse> {
     var baseURL = '/query/specs/';
     var fullURL = baseURL + encodeURIComponent(`spec=${specID}`);
     return fetch(fullURL)
+        .then((res) => res.json())
+        .then((data) => { return data; });
+}
+
+export function fetchSpecNames(): Promise<SpecNameResponse> {
+    return fetch('/query/specs/spec=all&namesonly=true')
         .then((res) => res.json())
         .then((data) => { return data; });
 }

@@ -28,3 +28,8 @@ export function fetchSpec(specID) {
         .then((res) => res.json())
         .then((data) => { return data; });
 }
+export function fetchSpecNames() {
+    return fetch('/query/specs/spec=all&namesonly=true')
+        .then((res) => res.json())
+        .then((data) => { return data; });
+}

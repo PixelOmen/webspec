@@ -7,7 +7,10 @@ const ELEMENTS = {
     tableItemsContainer: document.getElementById('table-items-container') as HTMLDivElement,
     tableHeaders: document.getElementById('table-headers') as HTMLDivElement,
     clientSelect: document.getElementById('client-select-dropdown') as HTMLSelectElement,
-    searchContainer: document.getElementById("search-container-main") as HTMLDivElement
+    searchContainer: document.getElementById("search-container-main") as HTMLDivElement,
+    searchInput: document.getElementById("search-container-main-input") as HTMLInputElement,
+    searchResultContainer: document.getElementById("search-results-container-main") as HTMLDivElement,
+    searchResultList: document.getElementById("search-results-list") as HTMLUListElement
 };
 
 const STATE = {
@@ -132,6 +135,60 @@ function setColumnWidths(): void {
     });
 }
 
+function setSearchResults(allSpecNames: string[], query: string): void {
+    ELEMENTS.searchResultList.innerHTML = "";
+    let found = 0;
+    for (const specName of allSpecNames) {
+        if (!specName.toLowerCase().includes(query)) {
+            continue;
+        }
+        const result = document.createElement('li');
+        result.classList.add('search-result');
+        result.innerHTML = specName;
+        ELEMENTS.searchResultList.appendChild(result);
+        result.addEventListener('click', () => {
+            window.location.href = `/nav/view?spec=${specName}`;
+        });
+        found++;
+    }
+    if (!found) {
+        const result = document.createElement('li');
+        result.classList.add('search-result');
+        result.innerHTML = "No results found";
+        ELEMENTS.searchResultList.appendChild(result);
+    }
+}
+
+async function setSearchbar(): Promise<void> {
+    ELEMENTS.searchContainer.classList.remove('hidden');
+    const containerPosition = ELEMENTS.searchContainer.getBoundingClientRect();
+    ELEMENTS.searchResultContainer.style.top = `${containerPosition.bottom}px`;
+    ELEMENTS.searchResultContainer.style.left = `${containerPosition.left}px`;
+    const response = await fetchDB.fetchSpecNames();
+    if (response.status != 'ok') {
+        console.error(response.error);
+        return;
+    }
+    const specNames = response.output.specNames;
+    ELEMENTS.searchInput.addEventListener('input', () => {
+        const searchValue = ELEMENTS.searchInput.value.toLowerCase();
+        if (searchValue) {
+            ELEMENTS.searchResultContainer.classList.remove('hidden');
+            console.log("keydown event added");
+        } else {
+            ELEMENTS.searchResultContainer.classList.add('hidden');
+            console.log("keydown event removed");
+        }
+        setSearchResults(specNames, searchValue);
+    });
+    ELEMENTS.searchInput.addEventListener('focusout', () => {
+        setTimeout(() => {
+            ELEMENTS.searchResultContainer.classList.add('hidden');
+            console.log("keydown event removed");
+        }, 100);
+    });
+}
+
 async function loadSpecURL(): Promise<void> {        
     const currentUrl = new URLSearchParams(window.location.search);
     const specName = currentUrl.get('spec');
@@ -150,9 +207,10 @@ async function loadSpecURL(): Promise<void> {
 
 async function main() {
     setClientDropdown();
+    setSearchbar();
     window.addEventListener('resize', setColumnWidths);
     window.addEventListener('clientsLoaded', loadSpecURL);
-    ELEMENTS.searchContainer.classList.remove('hidden');
+    
 }
 
 main();
