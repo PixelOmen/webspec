@@ -27,11 +27,8 @@
             <img src="{{ url_for('static', filename='img/roundaboutlogo_alt.png')}}" alt="Roundabout Sign" id='roundaboutSign-img'>
         </div>
         <div class="search-container hidden" id="search-container-main">
-            <img src="{{ url_for('static', filename='img/search_icon.png')}}" alt="Search Icon" id='searchIcon-img'>
+            <img src="{{ url_for('static', filename='img/search_icon.png')}}" alt="Search Icon" class='searchIcon-img'>
             <input type="text" id = "search-container-main-input" placeholder="Search" autocomplete="off">
-            <div class="search-results-container hidden" id="search-results-container-main">
-                <ul id="search-results-list"></ul>
-            </div>
         </div>
         <div id="nav-btn-container">
             <a href="/nav/entry">

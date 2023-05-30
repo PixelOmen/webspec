@@ -1,3 +1,4 @@
+import * as search from './libs/search.js';
 import * as fetchDB from "./libs/fetchDB.js";
 import * as detailedView from './libs/detailedview.js';
 import * as notifications from './libs/notifications.js';
@@ -137,17 +138,18 @@ function setColumnWidths(): void {
     });
 }
 
-function setSearchResults(allSpecNames: string[], query: string): void {
-    ELEMENTS.searchResultList.innerHTML = "";
+function setSearchResults(resultsContainer: HTMLUListElement, allResults: string[], query: string): void {
+    resultsContainer.innerHTML = "";
     let found = 0;
-    for (const specName of allSpecNames) {
+    for (const specName of allResults) {
         if (!specName.toLowerCase().includes(query)) {
             continue;
         }
         const result = document.createElement('li');
+        result.tabIndex = 0;
         result.classList.add('search-result');
         result.innerHTML = specName;
-        ELEMENTS.searchResultList.appendChild(result);
+        resultsContainer.appendChild(result);
         result.addEventListener('click', () => {
             window.location.href = `/nav/view?spec=${specName}`;
         });
@@ -155,40 +157,20 @@ function setSearchResults(allSpecNames: string[], query: string): void {
     }
     if (!found) {
         const result = document.createElement('li');
-        result.classList.add('search-result');
+        result.classList.add('search-result-empty');
         result.innerHTML = "No results found";
-        ELEMENTS.searchResultList.appendChild(result);
+        resultsContainer.appendChild(result);
     }
 }
 
-async function setSearchbar(): Promise<void> {
-    ELEMENTS.searchContainer.classList.remove('hidden');
-    const containerPosition = ELEMENTS.searchContainer.getBoundingClientRect();
-    ELEMENTS.searchResultContainer.style.top = `${containerPosition.bottom}px`;
-    ELEMENTS.searchResultContainer.style.left = `${containerPosition.left}px`;
+async function createSearchbar(): Promise<void> {
     const response = await fetchDB.fetchSpecNames();
     if (response.status != 'ok') {
         console.error(response.error);
         return;
     }
-    const specNames = response.output.specNames;
-    ELEMENTS.searchInput.addEventListener('input', () => {
-        const searchValue = ELEMENTS.searchInput.value.toLowerCase();
-        if (searchValue) {
-            ELEMENTS.searchResultContainer.classList.remove('hidden');
-            console.log("keydown event added");
-        } else {
-            ELEMENTS.searchResultContainer.classList.add('hidden');
-            console.log("keydown event removed");
-        }
-        setSearchResults(specNames, searchValue);
-    });
-    ELEMENTS.searchInput.addEventListener('focusout', () => {
-        setTimeout(() => {
-            ELEMENTS.searchResultContainer.classList.add('hidden');
-            console.log("keydown event removed");
-        }, 100);
-    });
+    const searchbar = new search.SearchBar(ELEMENTS.searchContainer, response.output.specNames, setSearchResults);
+    searchbar.container.classList.remove('hidden');
 }
 
 async function loadSpecURL(): Promise<void> {        
@@ -209,7 +191,7 @@ async function loadSpecURL(): Promise<void> {
 
 async function main() {
     setClientDropdown();
-    setSearchbar();
+    createSearchbar();
     window.addEventListener('resize', setColumnWidths);
     window.addEventListener('clientsLoaded', loadSpecURL);
     

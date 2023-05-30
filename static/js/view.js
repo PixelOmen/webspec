@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import * as search from './libs/search.js';
 import * as fetchDB from "./libs/fetchDB.js";
 import * as detailedView from './libs/detailedview.js';
 import * as notifications from './libs/notifications.js';
@@ -137,17 +138,18 @@ function setColumnWidths() {
         columnDiv.style.minWidth = `${maxColumnWidths[1]}px`;
     });
 }
-function setSearchResults(allSpecNames, query) {
-    ELEMENTS.searchResultList.innerHTML = "";
+function setSearchResults(resultsContainer, allResults, query) {
+    resultsContainer.innerHTML = "";
     let found = 0;
-    for (const specName of allSpecNames) {
+    for (const specName of allResults) {
         if (!specName.toLowerCase().includes(query)) {
             continue;
         }
         const result = document.createElement('li');
+        result.tabIndex = 0;
         result.classList.add('search-result');
         result.innerHTML = specName;
-        ELEMENTS.searchResultList.appendChild(result);
+        resultsContainer.appendChild(result);
         result.addEventListener('click', () => {
             window.location.href = `/nav/view?spec=${specName}`;
         });
@@ -155,41 +157,20 @@ function setSearchResults(allSpecNames, query) {
     }
     if (!found) {
         const result = document.createElement('li');
-        result.classList.add('search-result');
+        result.classList.add('search-result-empty');
         result.innerHTML = "No results found";
-        ELEMENTS.searchResultList.appendChild(result);
+        resultsContainer.appendChild(result);
     }
 }
-function setSearchbar() {
+function createSearchbar() {
     return __awaiter(this, void 0, void 0, function* () {
-        ELEMENTS.searchContainer.classList.remove('hidden');
-        const containerPosition = ELEMENTS.searchContainer.getBoundingClientRect();
-        ELEMENTS.searchResultContainer.style.top = `${containerPosition.bottom}px`;
-        ELEMENTS.searchResultContainer.style.left = `${containerPosition.left}px`;
         const response = yield fetchDB.fetchSpecNames();
         if (response.status != 'ok') {
             console.error(response.error);
             return;
         }
-        const specNames = response.output.specNames;
-        ELEMENTS.searchInput.addEventListener('input', () => {
-            const searchValue = ELEMENTS.searchInput.value.toLowerCase();
-            if (searchValue) {
-                ELEMENTS.searchResultContainer.classList.remove('hidden');
-                console.log("keydown event added");
-            }
-            else {
-                ELEMENTS.searchResultContainer.classList.add('hidden');
-                console.log("keydown event removed");
-            }
-            setSearchResults(specNames, searchValue);
-        });
-        ELEMENTS.searchInput.addEventListener('focusout', () => {
-            setTimeout(() => {
-                ELEMENTS.searchResultContainer.classList.add('hidden');
-                console.log("keydown event removed");
-            }, 100);
-        });
+        const searchbar = new search.SearchBar(ELEMENTS.searchContainer, response.output.specNames, setSearchResults);
+        searchbar.container.classList.remove('hidden');
     });
 }
 function loadSpecURL() {
@@ -213,7 +194,7 @@ function loadSpecURL() {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         setClientDropdown();
-        setSearchbar();
+        createSearchbar();
         window.addEventListener('resize', setColumnWidths);
         window.addEventListener('clientsLoaded', loadSpecURL);
     });
