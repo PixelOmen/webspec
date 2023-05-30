@@ -34,11 +34,13 @@ STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
 };
 STATE.CONNECTION.onclose = () => {
-    let msg = "Connection lost. Please try refreshing the page.";
-    new notifications.NotificationMsg(() => {
-        window.location.reload();
-    }).displayNotification(msg);
     console.log("Connection closed");
+    setTimeout(() => {
+        let msg = "Connection lost. Please try refreshing the page.";
+        new notifications.NotificationMsg(() => {
+            window.location.reload();
+        }).displayNotification(msg);
+    }, 500);
 };
 STATE.CONNECTION.onerror = (e) => {
     console.error(e);
@@ -64,7 +66,7 @@ function formToFormData(form) {
         if (value instanceof File) {
             continue;
         }
-        jsonobj[key] = value;
+        jsonobj[key] = value.trim();
     }
     const elements = form.querySelectorAll('input[type="checkbox"]');
     const checkboxes = elements;
@@ -140,6 +142,12 @@ function setUploadBtns() {
     ELEMENTS.docUploadBtnActual.addEventListener('change', () => {
         const file = ELEMENTS.docUploadBtnActual.files[0];
         ELEMENTS.docUploadFilename.innerText = file.name;
+        const fileSize = file.size / 1024 / 1024; // in MB
+        if (fileSize > 100) {
+            new notifications.NotificationMsg().displayNotification("File size too large. Max size is 100MB.");
+            ELEMENTS.docUploadBtnActual.value = "";
+            ELEMENTS.docUploadFilename.innerText = "No File Selected";
+        }
     });
     ELEMENTS.templateUploadBtnVisual.addEventListener('click', () => {
         ELEMENTS.templateUploadBtnActual.click();
@@ -147,6 +155,12 @@ function setUploadBtns() {
     ELEMENTS.templateUploadBtnActual.addEventListener('change', () => {
         const file = ELEMENTS.templateUploadBtnActual.files[0];
         ELEMENTS.templateUploadFilename.innerText = file.name;
+        const fileSize = file.size / 1024 / 1024; // in MB
+        if (fileSize > 100) {
+            new notifications.NotificationMsg().displayNotification("File size too large. Max size is 100MB.");
+            ELEMENTS.templateUploadBtnActual.value = "";
+            ELEMENTS.templateUploadFilename.innerText = "No File Selected";
+        }
     });
 }
 function setSubmitBtn() {

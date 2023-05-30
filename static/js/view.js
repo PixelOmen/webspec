@@ -32,10 +32,12 @@ STATE.CONNECTION.onopen = () => {
 };
 STATE.CONNECTION.onclose = () => {
     console.log("Connection closed");
-    let msg = "Connection lost. Please try refreshing the page.";
-    new notifications.NotificationMsg(() => {
-        window.location.reload();
-    }).displayNotification(msg);
+    setTimeout(() => {
+        let msg = "Connection lost. Please try refreshing the page.";
+        new notifications.NotificationMsg(() => {
+            window.location.reload();
+        }).displayNotification(msg);
+    }, 500);
 };
 STATE.CONNECTION.onerror = (e) => {
     console.error(e);
