@@ -66,5 +66,6 @@ export function loadSpec(specName, form, clientSelect) {
                     console.error("Unknown form element on Spec load: ", formElem);
             }
         }
+        return spec.output.specs[0].id;
     });
 }

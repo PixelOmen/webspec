@@ -22,7 +22,8 @@ const STATE = {
     sendAllowed: true,
     username: "",
     password: "",
-    isEditSession: false
+    isEditSession: false,
+    editID: null as string | null
 };
 STATE.CONNECTION.onopen = () => {
     console.log("Connection open");
@@ -70,6 +71,9 @@ function formToFormData(form: HTMLFormElement): FormData {
     for (const checkbox of checkboxes) {
         jsonobj[checkbox.name] = checkbox.checked;
     }
+    if (STATE.isEditSession && STATE.editID) {
+        jsonobj["id"] = STATE.editID;
+    };
     formData.append("jsonData", JSON.stringify(jsonobj));
     return formData;
 }
@@ -195,7 +199,7 @@ async function loadEditSpec(): Promise<boolean> {
     const currentUrl = new URLSearchParams(window.location.search);
     const specName = currentUrl.get('spec');
     if (!specName) return false;
-    await loading.loadSpec(specName, ELEMENTS.form, ELEMENTS.clientSelect);
+    STATE.editID = await loading.loadSpec(specName, ELEMENTS.form, ELEMENTS.clientSelect);
     if (currentUrl.get('clone')) {
         return false;
     } else {

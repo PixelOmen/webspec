@@ -66,6 +66,13 @@ function setClientDropdown() {
             STATE.clientsLoaded = true;
             window.dispatchEvent(new Event('clientsLoaded'));
         }
+        const hasOverflowed = ELEMENTS.tableItemsContainer.scrollHeight > ELEMENTS.tableItemsContainer.clientHeight;
+        if (hasOverflowed) {
+            ELEMENTS.tableHeaders.classList.add('table-headers-scrollbarPadding');
+        }
+        else {
+            ELEMENTS.tableHeaders.classList.remove('table-headers-scrollbarPadding');
+        }
     }));
     fetchDB.fetchClients().then((res) => {
         if (res.status == "error") {

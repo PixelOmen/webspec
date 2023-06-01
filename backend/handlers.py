@@ -52,7 +52,6 @@ class UploadHandler:
             session.close()
             return
         spec = Spec(**self.jsondata)
-        print(spec.id)
         session.add(spec)
 
     def _set_error(self, error: str) -> None:
@@ -72,9 +71,10 @@ class UploadHandler:
             return
         try:
             if self._editsession:
-                spec = session.query(Spec).filter(Spec.name == self.jsondata["name"]).first()
+                id = self.jsondata["id"]
+                spec = session.query(Spec).filter(Spec.id == id).first()
                 if not spec:
-                    self._set_error("Spec name not found.")
+                    self._set_error(f"Spec ID not found: {id}")
                     session.close()
                     return
                 for key, value in self.jsondata.items():

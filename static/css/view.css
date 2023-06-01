@@ -57,6 +57,10 @@
     box-sizing: border-box;
 }
 
+.table-headers-scrollbarPadding {
+    margin-right: 10px;
+}
+
 .table-header-item {
     text-align: center;
     white-space: nowrap;

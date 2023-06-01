@@ -22,7 +22,7 @@ function setSource(spec: fetchDB.Spec): void {
     new notifications.NotificationMsg().displayNotification(msg);
 }
 
-export async function loadSpec(specName: string, form: HTMLFormElement, clientSelect: HTMLSelectElement): Promise<void> {
+export async function loadSpec(specName: string, form: HTMLFormElement, clientSelect: HTMLSelectElement): Promise<string> {
     const spec = await fetchDB.fetchSpec(specName);
     if (spec.status != "ok") {
         throw new Error(spec.error);
@@ -60,4 +60,5 @@ export async function loadSpec(specName: string, form: HTMLFormElement, clientSe
                 console.error("Unknown form element on Spec load: ", formElem);
         }
     }
+    return spec.output.specs[0].id;
 }

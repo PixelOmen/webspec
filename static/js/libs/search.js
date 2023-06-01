@@ -1,7 +1,5 @@
 export class SearchBar {
     constructor(container, allResults, setResultsFunc) {
-        this.inputFocus = false;
-        this.resultsFocus = false;
         this.resultIndex = 0;
         this.currentSelection = null;
         this.container = container;
@@ -46,11 +44,9 @@ export class SearchBar {
         }
         ;
         if (results.length < 1) {
-            this.resultsFocus = false;
             this.searchInput.focus();
             return;
         }
-        this.resultsFocus = true;
         if (e.key == "ArrowDown") {
             e.preventDefault();
             if (this.resultIndex < results.length) {
@@ -73,7 +69,6 @@ export class SearchBar {
             this.searchInput.value = this.currentSelection.innerHTML;
         }
         else {
-            this.resultsFocus = false;
             this.searchInput.focus();
         }
     }

@@ -7,8 +7,6 @@ export class SearchBar {
     resultsList: HTMLUListElement;
     allResults: string[];
     setResultsFunc: SetResultsFunc;
-    inputFocus: boolean = false;
-    resultsFocus: boolean = false;
     resultIndex: number = 0;
     currentSelection: HTMLLIElement | null = null;
 
@@ -58,11 +56,9 @@ export class SearchBar {
             return;
         };
         if (results.length < 1) {
-            this.resultsFocus = false;
             this.searchInput.focus();
             return;
         }
-        this.resultsFocus = true;
         if (e.key == "ArrowDown") {
             e.preventDefault();
             if (this.resultIndex < results.length) {
@@ -82,7 +78,6 @@ export class SearchBar {
             this.currentSelection.focus();
             this.searchInput.value = this.currentSelection.innerHTML;
         } else {
-            this.resultsFocus = false;
             this.searchInput.focus();
         }
     }
