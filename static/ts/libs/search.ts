@@ -16,6 +16,7 @@ export class SearchBar {
         this.container = container;
         this.searchInput = this._setSearchInput();
         this.resultsContainer = this._createResultsContainer();
+        this._moveResultsContainer();
         this.container.appendChild(this.resultsContainer);
         this.resultsContainer.appendChild(this._createResultsList());
         this.resultsList = this.resultsContainer.querySelector('ul') as HTMLUListElement;
@@ -32,13 +33,16 @@ export class SearchBar {
         return searchInput;
     }
 
+    private _moveResultsContainer(): void {
+        const containerPosition = this.container.getBoundingClientRect();
+        this.resultsContainer.style.top = `${containerPosition.bottom}px`;
+        this.resultsContainer.style.left = `${containerPosition.left}px`;
+    }
+
     private _createResultsContainer(): HTMLDivElement {
         const resultsContainer = document.createElement('div');
         resultsContainer.classList.add('search-results-container');
         resultsContainer.classList.add('hidden');
-        const containerPosition = this.container.getBoundingClientRect();
-        resultsContainer.style.top = `${containerPosition.bottom}px`;
-        resultsContainer.style.left = `${containerPosition.left}px`;
         return resultsContainer;
     }
 
@@ -84,6 +88,7 @@ export class SearchBar {
     }
 
     private _setListeners(): void {
+        window.addEventListener('resize', this._moveResultsContainer.bind(this));
         this.container.addEventListener('focusout', () => {
             setTimeout(() => {
                 if (this.container.contains(document.activeElement)) {

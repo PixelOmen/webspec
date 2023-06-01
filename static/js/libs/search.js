@@ -7,6 +7,7 @@ export class SearchBar {
         this.container = container;
         this.searchInput = this._setSearchInput();
         this.resultsContainer = this._createResultsContainer();
+        this._moveResultsContainer();
         this.container.appendChild(this.resultsContainer);
         this.resultsContainer.appendChild(this._createResultsList());
         this.resultsList = this.resultsContainer.querySelector('ul');
@@ -21,13 +22,15 @@ export class SearchBar {
         }
         return searchInput;
     }
+    _moveResultsContainer() {
+        const containerPosition = this.container.getBoundingClientRect();
+        this.resultsContainer.style.top = `${containerPosition.bottom}px`;
+        this.resultsContainer.style.left = `${containerPosition.left}px`;
+    }
     _createResultsContainer() {
         const resultsContainer = document.createElement('div');
         resultsContainer.classList.add('search-results-container');
         resultsContainer.classList.add('hidden');
-        const containerPosition = this.container.getBoundingClientRect();
-        resultsContainer.style.top = `${containerPosition.bottom}px`;
-        resultsContainer.style.left = `${containerPosition.left}px`;
         return resultsContainer;
     }
     _createResultsList() {
@@ -75,6 +78,7 @@ export class SearchBar {
         }
     }
     _setListeners() {
+        window.addEventListener('resize', this._moveResultsContainer.bind(this));
         this.container.addEventListener('focusout', () => {
             setTimeout(() => {
                 if (this.container.contains(document.activeElement)) {
