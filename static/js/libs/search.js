@@ -1,5 +1,9 @@
 export class SearchBar {
     constructor(container, allResults, setResultsFunc) {
+        this.inputFocus = false;
+        this.resultsFocus = false;
+        this.resultIndex = 0;
+        this.currentSelection = null;
         this.container = container;
         this.searchInput = this._setSearchInput();
         this.resultsContainer = this._createResultsContainer();
@@ -31,8 +35,58 @@ export class SearchBar {
         resultsList.classList.add('search-results-list');
         return resultsList;
     }
+    _keyDownHandler(e) {
+        var _a;
+        const results = this.resultsList.querySelectorAll('li');
+        if (e.key != "ArrowDown" && e.key != "ArrowUp" && e.key != "Enter") {
+            return;
+        }
+        ;
+        if (results.length < 1) {
+            this.resultsFocus = false;
+            this.searchInput.focus();
+            return;
+        }
+        this.resultsFocus = true;
+        if (e.key == "ArrowDown") {
+            e.preventDefault();
+            if (this.resultIndex < results.length) {
+                this.resultIndex++;
+            }
+        }
+        else if (e.key == "ArrowUp") {
+            e.preventDefault();
+            if (this.resultIndex > 0) {
+                this.resultIndex--;
+            }
+        }
+        else {
+            (_a = this.currentSelection) === null || _a === void 0 ? void 0 : _a.click();
+            return;
+        }
+        if (this.resultIndex > 0) {
+            this.currentSelection = results[this.resultIndex - 1];
+            this.currentSelection.focus();
+            this.searchInput.value = this.currentSelection.innerHTML;
+        }
+        else {
+            this.resultsFocus = false;
+            this.searchInput.focus();
+        }
+    }
     _setListeners() {
+        this.container.addEventListener('focusout', () => {
+            setTimeout(() => {
+                if (this.container.contains(document.activeElement)) {
+                    return;
+                }
+                this.resultsContainer.classList.add('hidden');
+                this.currentSelection = null;
+            }, 100);
+        });
         this.searchInput.addEventListener('input', () => {
+            this.currentSelection = null;
+            this.resultIndex = 0;
             const searchValue = this.searchInput.value.toLowerCase();
             if (searchValue) {
                 this.resultsContainer.classList.remove('hidden');
@@ -42,21 +96,6 @@ export class SearchBar {
             }
             this.setResultsFunc(this.resultsList, this.allResults, searchValue);
         });
-        this.searchInput.addEventListener('focusout', () => {
-            setTimeout(() => {
-                this.resultsContainer.classList.add('hidden');
-            }, 100);
-        });
+        this.container.addEventListener('keydown', this._keyDownHandler.bind(this));
     }
 }
-// const arrowFunc = (e: KeyboardEvent) => {
-//     if (e.key == "ArrowDown") {
-//         const firstResult = ELEMENTS.searchResultList.firstElementChild as HTMLLIElement;
-//         firstResult.focus();
-//         e.preventDefault();
-//     } else if (e.key == "ArrowUp") {
-//         const lastResult = ELEMENTS.searchResultList.lastElementChild as HTMLLIElement;
-//         lastResult.focus();
-//         e.preventDefault();
-//     }
-// }

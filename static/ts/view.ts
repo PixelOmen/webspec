@@ -59,7 +59,7 @@ function setClientDropdown(): void {
         setTableItems(clientSpecs.output.specs);
         if (!STATE.clientsLoaded) {
             STATE.clientsLoaded = true;
-            window.dispatchEvent( new Event('clientsLoaded'));
+            window.dispatchEvent(new Event('clientsLoaded'));
         }
     });
     fetchDB.fetchClients().then((res) => {
@@ -194,7 +194,6 @@ async function main() {
     createSearchbar();
     window.addEventListener('resize', setColumnWidths);
     window.addEventListener('clientsLoaded', loadSpecURL);
-    
 }
 
 main();
