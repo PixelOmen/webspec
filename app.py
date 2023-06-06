@@ -10,8 +10,8 @@ from flask import Flask, render_template, request, Response
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
-import backend.db.settings
 from backend import BackEndResponse
+from backend.db.utils import init_db
 from backend.handlers import UploadHandler, QueryHandler
 
 if TYPE_CHECKING:
@@ -29,7 +29,8 @@ mimetypes.add_type("application/javascript", ".js", True)
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-backend.db.settings.SETTINGS['db'] = "testdb"
+
+init_db()
 
 
 def handle_request(environ: dict, start_response: Callable):
