@@ -2,8 +2,8 @@ from urllib.parse import parse_qs
 from typing import Any, TYPE_CHECKING
 
 from . import BackEndResponse
+from .db import get_session
 from .db.schema import Spec, Client
-from .db.config import SESSIONFACTORY
 
 if TYPE_CHECKING:
     from werkzeug.datastructures import ImmutableMultiDict, FileStorage
@@ -63,7 +63,7 @@ class UploadHandler:
         return BackEndResponse(type="upload", status=self._status, error=self._error, output=output)
 
     def send(self) -> None:
-        session = SESSIONFACTORY()
+        session = get_session()
         self._handle_files()
         self._handle_client(session)
         if self._status == "error":
@@ -104,7 +104,7 @@ class QueryHandler:
 
     def _get_session(self) -> "Session":
         if self.session is None:
-            self.session = SESSIONFACTORY()
+            self.session = get_session()
         return self.session
     
     def _close_session(self) -> None:

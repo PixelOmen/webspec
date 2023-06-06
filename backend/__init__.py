@@ -1,6 +1,9 @@
 from typing import Any
 from dataclasses import dataclass, field
 
+from .db import start_engine
+from .settings import DB_SETTINGS
+
 @dataclass
 class BackEndResponse:
     type: str
@@ -15,3 +18,5 @@ class BackEndResponse:
             "error": self.error,
             "output": self.output
         }
+    
+start_engine(**DB_SETTINGS)
