@@ -22,16 +22,14 @@
 }
 
 #table-controls {
-    height: 40px;
+    display: flex;
     border-bottom: 1px solid rgb(178, 178, 178);
-    overflow: hidden;
-    /* min-width: 1386px; */
     max-width: 100%;
 }
 
 #client-select-container {
+    margin-top: 5px;
     padding-left: 10px;
-    width: auto;
 }
 
 #client-select-container select {

@@ -6,7 +6,7 @@ import urllib.parse
 from typing import TYPE_CHECKING, Callable, Any
 
 from gevent import pywsgi
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
 
@@ -104,5 +104,5 @@ def query(table: str, query: str):
 
 
 if __name__ == '__main__':
-    server = pywsgi.WSGIServer(('0.0.0.0', 80), handle_request, handler_class=WebSocketHandler)
+    server = pywsgi.WSGIServer(('0.0.0.0', 4020), handle_request, handler_class=WebSocketHandler)
     server.serve_forever()

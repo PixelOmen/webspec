@@ -13,6 +13,10 @@
                     <option value="Placeholder">Loading..</option>
                 </select>
             </div>
+            <div class="search-container" id="search-container-main">
+                <img src="{{ url_for('static', filename='img/search_icon.png')}}" alt="Search Icon" class='searchIcon-img'>
+                <input type="text" id = "search-container-main-input" placeholder="Search (Spec Names)" autocomplete="off">
+            </div>
         </div>
         <div class="table-column-container" id="table-headers">
             <div class="table-header-item table-column">ID</div>

@@ -5,13 +5,13 @@ export class SearchBar {
         this.container = container;
         this.searchInput = this._setSearchInput();
         this.resultsContainer = this._createResultsContainer();
-        this._moveResultsContainer();
         this.container.appendChild(this.resultsContainer);
         this.resultsContainer.appendChild(this._createResultsList());
         this.resultsList = this.resultsContainer.querySelector('ul');
         this.allResults = allResults;
         this.setResultsFunc = setResultsFunc;
         this._setListeners();
+        // this._moveResultsContainer();
     }
     _setSearchInput() {
         const searchInput = this.container.querySelector('input');
