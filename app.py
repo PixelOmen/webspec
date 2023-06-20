@@ -104,5 +104,5 @@ def query(table: str, query: str):
 
 
 if __name__ == '__main__':
-    server = pywsgi.WSGIServer(('0.0.0.0', 4060), handle_request, handler_class=WebSocketHandler)
+    server = pywsgi.WSGIServer(('0.0.0.0', 80), handle_request, handler_class=WebSocketHandler)
     server.serve_forever()
