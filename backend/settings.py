@@ -1,5 +1,5 @@
 DB_SETTINGS = {
-    'host': 'localhost',
+    'host': 'db',
     'port': 5432,
     'db': 'specdb',
     'user': 'postgres',
