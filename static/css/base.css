@@ -9,63 +9,32 @@
     border-radius: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
-    /* border-radius: 10px; */
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: rgb(16, 176, 174);
-    /* border-radius: 10px; */
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: rgb(12, 122, 121);
 }
 
 .banner {
-    /* position: relative; */
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
-    width: auto;
-    height: 4em;
-    /* background-color: rgb(16, 176, 174);
-    background: linear-gradient(to right, rgb(1, 5, 5) 0px, rgb(16, 176, 174) 180px); */
-    /* border-bottom: solid 2px black; */
+    border-radius: 0 0 10px 10px;
+    background: rgb(12, 122, 121);
+    margin-bottom: 10px;
+    padding: 5px 0;
 }
 
-.fullLogo-container {
-    display: flex;
-    align-items: center;
-}
-
-#circleLogo-container {
-    border-radius: 100%;
-}
-
-#mainLogo-img {
-    position: relative;
-    top: 2px;
-    width: 60px;
-}
-
-img#roundaboutSign-img {
-    object-fit: cover;
-    object-position: 19% 100%;
-    width: 220px;
-    height: 3em;
-}
-
-.banner #nav-btn-container {
+#nav-btn-container {
     margin-left: auto;
+    margin-right: auto;
     display: flex;
-    margin-right: 30px;
-    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px;
+    width: 220px;
 }
 
 #nav-btn-container button {
@@ -73,22 +42,18 @@ img#roundaboutSign-img {
     height: 30px;
     width: 100px;
     text-align: center;
-    margin-left: 20px;
     border-radius: 5px;
     text-decoration: none;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-    /* background-color: #2e2e2e; */
     background-color: #42a76a;
 }
 
 #nav-btn-container button:hover {
-    /* background-color: #424242; */
     background-color: #4bbb78;
 }
 
 #nav-btn-container button:active {
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
-    /* box-shadow: inset 0 0 20px rgba(177, 177, 177, 0.9); */
 }
 
 #nav-btn-container a {
